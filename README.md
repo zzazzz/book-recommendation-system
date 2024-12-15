@@ -161,3 +161,15 @@ Berikut merupakan hasil visualisasi Distribusi Rating Eksplisit Buku (1-10)
 
 ![alt text](image-8.png)
 
+8. Jumlah Pengguna per Negara
+
+![alt text](image-9.png)
+
+- Hasil dari visualisasi diatas, pengguna yang paling banyak berdasarkan negara berasal dari USA.
+
+9. Jumlah Pengguna per Kota
+
+![alt text](image-10.png)
+
+- Hasil dari visualisasi diatas, pengguna yang paling banyak berdasarkan kota berasal dari London.
+
