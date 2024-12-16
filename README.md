@@ -109,7 +109,7 @@ File ini berisi data penilaian yang diberikan oleh pengguna terhadap buku-buku. 
 
 ## Data Preparation
 
-### Books Dataset
+### 1. Books Dataset
 
 #### Overview
 Proses data preparation dilakukan untuk memastikan dataset **Books** bersih, konsisten, dan siap digunakan untuk analisis atau pengembangan model rekomendasi. Berikut adalah langkah-langkah yang dilakukan untuk memproses data:
@@ -180,8 +180,19 @@ books.loc[books['ISBN'] == '2070426769', 'Book-Author'] = 'Jean-Marie Gustave Le
 books.loc[books['ISBN'] == '2070426769', 'Year-Of-Publication'] = 2003
 books.loc[books['ISBN'] == '2070426769', 'Book-Title'] = 'Peuple du ciel - Suivi de Les bergers'
 ```
+##### c. Mengubah Tipe Data Kolom Tahun Menjadi Integer
 
-##### c. Normalisasi Tahun
+```python
+books['Year-Of-Publication'] = books['Year-Of-Publication'].astype(int)
+print(sorted(books['Year-Of-Publication'].unique()))
+```
+
+**Output:**
+```
+[0, 1376, 1378, 1806, 1897, 1900, 1901, 1902, 1904, 1906, 1908, 1909, 1910, 1911, 1914, 1917, 1919, 1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2008, 2010, 2011, 2012, 2020, 2021, 2024, 2026, 2030, 2037, 2038, 2050]
+```
+
+##### d. Normalisasi Tahun
 Melakukan analisis untuk jumlah publikasi yang memiliki:
 - **Year-Of-Publication** lebih dari 2020.
 - **Year-Of-Publication** sama dengan 0.
@@ -207,7 +218,7 @@ Jumlah publikasi dengan Year-Of-Publication = 0: 4618
 Total publikasi: 271360
 ```
 
-##### d. Normalisasi Nilai Tidak Valid
+##### e. Normalisasi Nilai Tidak Valid
 Mengganti nilai **Year-Of-Publication** yang lebih dari 2020 atau sama dengan 0 menjadi 2002 (tahun yang lebih masuk akal):
 
 ```python
@@ -229,10 +240,94 @@ books.Publisher = books.Publisher.str.replace('&amp;', '&', regex=False)
 Setelah proses data preparation, dataset **Books** menjadi lebih bersih dan konsisten:
 - Kolom URL gambar dihapus.
 - Nilai kosong pada kolom **Book-Author** dan **Publisher** diisi dengan **'Other'**.
-- Kesalahan pada kolom **Year-Of-Publication** diperbaiki, dan nilai tidak valid diganti dengan 2002.
+- Kesalahan pada kolom **Year-Of-Publication** diperbaiki, dan nilai tidak valid diganti dengan 2002. Kemudian tipe data diganti menjadi integer.
 - Normalisasi karakter HTML pada kolom **Publisher** selesai dilakukan.
 
 Dataset siap untuk analisis lebih lanjut atau pengembangan model rekomendasi.
+
+### 2. Ratings Dataset
+
+#### Overview
+Bagian ini menjelaskan langkah-langkah dan pengamatan selama fase persiapan data untuk dataset `Ratings`.
+
+---
+
+##### Inspeksi Awal
+
+###### Memeriksa Nilai Kosong
+```python
+ratings.isnull().sum()
+```
+**Output:**
+```
+User-ID        0
+ISBN           0
+Book-Rating    0
+```
+**Observasi:**
+- Dataset tidak mengandung nilai kosong pada kolom mana pun.
+
+###### Memeriksa Data Duplikat
+```python
+ratings.duplicated().sum()
+```
+**Output:**
+```
+0
+```
+**Observasi:**
+- Tidak ditemukan data duplikat dalam dataset.
+
+###### Informasi Dataset
+```python
+ratings.info()
+```
+**Output:**
+```
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 1149780 entries, 0 to 1149779
+Data columns (total 3 columns):
+ #   Column       Non-Null Count    Dtype 
+---  ------       --------------    ----- 
+ 0   User-ID      1149780 non-null  int64 
+ 1   ISBN         1149780 non-null  object
+ 2   Book-Rating  1149780 non-null  int64 
+dtypes: int64(2), object(1)
+memory usage: 26.3+ MB
+```
+**Observasi:**
+- Dataset memiliki 1.149.780 entri dan tiga kolom:
+  - `User-ID`: Identifikasi pengguna (integer).
+  - `ISBN`: Identifikasi buku (string).
+  - `Book-Rating`: Penilaian yang diberikan kepada buku (integer).
+- Tidak ada nilai kosong dalam dataset.
+
+---
+
+##### Eksplorasi Kolom `Book-Rating`
+
+###### Nilai Unik dalam `Book-Rating`
+```python
+ratings['Book-Rating'].unique()
+```
+**Output:**
+```
+array([ 0,  5,  3,  6,  8,  7, 10,  9,  4,  1,  2], dtype=int64)
+```
+**Observasi:**
+- Kolom `Book-Rating` mengandung nilai integer antara 0 hingga 10:
+  - Nilai `0` biasanya menunjukkan penilaian implisit atau tidak adanya feedback eksplisit.
+  - Nilai `1` hingga `10` merepresentasikan feedback eksplisit, dengan nilai lebih tinggi menunjukkan kepuasan lebih besar.
+
+---
+
+##### Ringkasan
+1. Dataset bersih dan tidak mengandung nilai kosong maupun data duplikat.
+2. Kolom `Book-Rating` memiliki rentang nilai (0-10), di mana `0` menunjukkan penilaian implisit, dan `1-10` menunjukkan penilaian eksplisit.
+3. Tidak diperlukan praproses tambahan pada tahap ini, karena data sudah siap untuk analisis lebih lanjut.
+
+---
+
 
 ## Data Visualization
 
