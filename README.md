@@ -718,3 +718,55 @@ Recommended Books based on 'Harry Potter and the Sorcerer's Stone (Harry Potter 
 9. She's Come Undone (Oprah's Book Club (Paperback))
 10. The Book of Ruth (Oprah's Book Club (Paperback))
 ```
+
+#### Deskripsi
+
+Proyek ini mengimplementasikan sistem rekomendasi berbasis **Content-Based Filtering** untuk buku, dengan fokus pada rata-rata rating yang diterima buku. Rekomendasi buku didasarkan pada kesamaan judul buku dan kualitas buku yang diukur berdasarkan rata-rata rating dari pengguna.
+
+##### Langkah-Langkah yang Dilakukan
+
+1. Memfilter Buku Berdasarkan Popularitas dan Rata-rata Rating
+Langkah pertama adalah memfilter buku yang populer berdasarkan dua faktor:
+- **Jumlah Rating**: Buku dengan jumlah rating lebih dari 50 dianggap populer.
+- **Rata-rata Rating**: Buku yang memiliki rating tertinggi berdasarkan rata-rata rating akan diprioritaskan dalam rekomendasi.
+
+Setelah buku-buku yang memenuhi kriteria ini disaring, data buku populer digabungkan dengan dataset asli untuk mendapatkan informasi lebih lanjut mengenai buku tersebut, seperti penulis.
+
+2. Pembuatan Matriks TF-IDF
+Matriks **TF-IDF (Term Frequency-Inverse Document Frequency)** digunakan untuk mengubah judul buku menjadi vektor numerik. Ini dilakukan untuk mengukur pentingnya kata dalam judul buku dibandingkan dengan seluruh koleksi buku:
+- **n-gram**: Unigram dan bigram digunakan untuk menangkap kata atau frasa yang relevan dalam judul buku.
+- **Stopwords**: Kata-kata umum dalam bahasa Inggris dihapus agar kata yang lebih penting bisa lebih berpengaruh dalam perhitungan kesamaan.
+
+3. Perhitungan Cosine Similarity
+Setelah matriks TF-IDF dibuat, **Cosine Similarity** dihitung untuk mengukur seberapa mirip dua buku berdasarkan judulnya. Semakin tinggi nilai cosine similarity, semakin mirip kedua buku tersebut.
+
+4. Fungsi Rekomendasi Buku
+Fungsi `recommend_books` akan memberikan rekomendasi buku berdasarkan kesamaan judul buku yang dipilih dan rata-rata rating buku:
+- Diberikan nama buku, fungsi ini akan mencari buku yang paling mirip berdasarkan **Cosine Similarity** dan menampilkan buku dengan rating tertinggi di antara buku-buku yang mirip.
+- Rekomendasi buku akan diurutkan berdasarkan **rata-rata rating** secara menurun.
+
+##### Contoh Penggunaan
+
+Untuk mendapatkan rekomendasi buku berdasarkan judul buku tertentu, Anda dapat menggunakan kode berikut:
+
+```python
+bookName = "Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))"
+recommend_books(bookName)
+```
+
+**Output:**
+
+Berikut adalah contoh output untuk buku "Harry Potter and the Sorcerer's Stone":
+
+| No | Book-Title | Book-Author | avg_rating |
+|----|------------|-------------|------------|
+| 1  | Harry Potter and the Goblet of Fire (Book 4) | J. K. Rowling | 9.125506 |
+| 2  | Harry Potter and the Sorcerer's Stone (Book 1) | J. K. Rowling | 9.062500 |
+| 3  | Harry Potter and the Order of the Phoenix (Book 5) | J. K. Rowling | 9.047393 |
+| 4  | Harry Potter and the Prisoner of Azkaban (Book 3) | J. K. Rowling | 9.043321 |
+| 5  | Harry Potter and the Chamber of Secrets (Book 2) | J. K. Rowling | 8.840491 |
+| 6  | Where the Heart Is (Oprah's Book Club (Paperback)) | Billie Letts | 8.142373 |
+| 7  | From Potter's Field | Patricia Daniels Cornwell | 7.717172 |
+| 8  | Big Stone Gap: A Novel (Ballantine Reader's Circle) | Adriana Trigiani | 7.500000 |
+| 9  | The Stone Diaries | Carol Shields | 7.450704 |
+| 10 | The Shelters of Stone (Earth's Children Series) | JEAN M. AUEL | 7.258621 |
