@@ -112,7 +112,7 @@ File ini berisi data penilaian yang diberikan oleh pengguna terhadap buku-buku. 
 ### 1. Books Dataset
 
 #### Overview
-Proses data preparation dilakukan untuk memastikan dataset **Books** bersih, konsisten, dan siap digunakan untuk analisis atau pengembangan model rekomendasi. Berikut adalah langkah-langkah yang dilakukan untuk memproses data:
+Dataset ini terdiri dari 8 kolom dan 271360 baris. Proses data preparation dilakukan untuk memastikan dataset **Books** bersih, konsisten, dan siap digunakan untuk analisis atau pengembangan model rekomendasi. Berikut adalah langkah-langkah yang dilakukan untuk memproses data:
 
 ---
 
@@ -248,7 +248,7 @@ Dataset siap untuk analisis lebih lanjut atau pengembangan model rekomendasi.
 ### 2. Ratings Dataset
 
 #### Overview
-Bagian ini menjelaskan langkah-langkah dan pengamatan selama fase persiapan data untuk dataset `Ratings`.
+Dataset ini terdiri dari 3 kolom dan 1149780 baris. Bagian ini menjelaskan langkah-langkah dan pengamatan selama fase persiapan data untuk dataset `Ratings`.
 
 ---
 
@@ -327,6 +327,156 @@ array([ 0,  5,  3,  6,  8,  7, 10,  9,  4,  1,  2], dtype=int64)
 3. Tidak diperlukan praproses tambahan pada tahap ini, karena data sudah siap untuk analisis lebih lanjut.
 
 ---
+
+### 3. Users Dataset
+
+Dokumen ini menjelaskan langkah-langkah persiapan untuk membersihkan dan mentransformasi dataset `Users`, yang berisi informasi pengguna.
+
+#### Gambaran Umum Dataset
+- **Dimensi:** `(278858, 3)`
+- **Kolom:** `User-ID`, `Location`, `Age`
+
+#### Pemeriksaan Awal
+
+##### Nilai Kosong
+```python
+users.isnull().sum()
+```
+**Output:**
+```
+User-ID          0
+Location         0
+Age         110762
+```
+
+##### Nilai Duplikat
+```python
+users.duplicated().sum()
+```
+**Output:**
+```
+0
+```
+
+##### Informasi Dataset
+```python
+users.info()
+```
+**Output:**
+```
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 278858 entries, 0 to 278857
+Data columns (total 3 columns):
+ #   Column    Non-Null Count   Dtype  
+---  ------    --------------   -----  
+ 0   User-ID   278858 non-null  int64  
+ 1   Location  278858 non-null  object 
+ 2   Age       168096 non-null  float64
+```
+
+#### Langkah-Langkah Pembersihan Data
+
+##### Penanganan Outlier dan Nilai Kosong pada Kolom `Age`
+
+###### Nilai Unik dalam `Age`
+```python
+print(sorted(list(users['Age'].unique())))
+```
+**Output:**
+```
+[nan, 0.0, 1.0, 2.0, ..., 244.0]
+```
+
+Nilai kurang dari `10` dan lebih dari `80` dianggap sebagai outlier. Nilai-nilai ini digantikan dengan rata-rata dari usia valid (antara `10` dan `80`). Nilai kosong (`NaN`) juga diisi dengan rata-rata ini, dan kolom diubah menjadi tipe integer.
+
+```python
+required = users[(users['Age'] >= 10) & (users['Age'] <= 80)]
+mean = round(required['Age'].mean())
+
+users.loc[users['Age'] > 80, 'Age'] = mean
+users.loc[users['Age'] < 10, 'Age'] = mean
+users['Age'] = users['Age'].fillna(mean)
+users['Age'] = users['Age'].astype(int)
+```
+
+**Hasil:** Kolom `Age` sudah bersih, dengan outlier dan nilai kosong digantikan.
+
+##### Memisahkan Kolom `Location`
+Kolom `Location`, yang berisi `City`, `Region`, dan `Country` dalam satu string, dipecah menjadi tiga kolom terpisah.
+
+```python
+split_location = users['Location'].str.split(',', expand=True).fillna('')
+users[['City', 'Region', 'Country']] = split_location.iloc[:, :3]
+
+# Menghapus spasi ekstra
+users['City'] = users['City'].str.strip()
+users['Region'] = users['Region'].str.strip()
+users['Country'] = users['Country'].str.strip()
+
+# Menghapus kolom Location asli
+users.drop(columns='Location', inplace=True)
+```
+
+##### Penanganan Nilai Kosong dan Inkonsistensi pada `Country` dan `Region`
+
+- Mengganti string kosong pada `Country` dengan `Other`.
+- Mengganti `n/a` pada `Region` dengan `Other`.
+- Standarisasi nama negara.
+
+```python
+import numpy as np
+users['Country'].replace('', np.nan, inplace=True)
+users['Country'] = users['Country'].fillna('Other')
+users['Region'] = users['Region'].replace('n/a', 'Other')
+
+users = users.replace({
+    "england, united kingdom": "england",
+    "united kingdom": "england",
+    "united states of america": "usa",
+    "l`italia": "italy"
+}, regex=True)
+```
+
+##### Menghapus Karakter Khusus
+Semua kolom dibersihkan untuk menghapus karakter khusus dan spasi ekstra.
+
+```python
+import re
+
+def remove_special_characters(value):
+    if isinstance(value, str):
+        return re.sub(r'[^A-Za-z0-9\s]', '', value).strip()
+    return value
+
+users = users.applymap(remove_special_characters)
+```
+
+#### Dataset Akhir
+
+- `User-ID`: Identifier unik untuk setiap pengguna.
+- `Age`: Nilai usia yang telah dibersihkan (tipe integer).
+- `City`: Kota tempat tinggal pengguna.
+- `Region`: Wilayah tempat tinggal pengguna.
+- `Country`: Negara pengguna, distandarisasi dan dibersihkan.
+
+Contoh dataset yang telah dibersihkan:
+
+| User-ID | Age | City         | Region      | Country        |
+|---------|-----|--------------|-------------|----------------|
+| 1       | 35  | nyc          | new york    | usa            |
+| 2       | 18  | stockton     | california  | usa            |
+| 3       | 35  | moscow       | yukon       | russia         |
+| 4       | 17  | porto        | v.n.gaia    | portugal       |
+| 5       | 35  | farnborough  | hants       | united kingdom |
+
+#### Ringkasan Langkah Pembersihan
+1. Mengidentifikasi dan mengganti outlier pada kolom `Age` dengan nilai rata-rata usia yang valid.
+2. Menangani nilai kosong pada kolom `Age` dengan mengisi menggunakan rata-rata yang telah dihitung.
+3. Memisahkan kolom `Location` menjadi `City`, `Region`, dan `Country`.
+4. Membersihkan kolom `Country` dan `Region`, mengganti nilai yang tidak konsisten dan kosong.
+5. Standarisasi dan penghapusan karakter khusus dari semua kolom.
+
+Dataset kini siap untuk analisis lebih lanjut atau pemodelan.
 
 
 ## Data Visualization
