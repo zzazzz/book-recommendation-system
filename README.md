@@ -821,9 +821,7 @@ Dimana:
    - Vektor Buku B = [4, 5, 0]
   
 2. Hitung perkalian dot antara kedua vektor:
-   $$
-   A \cdot B = (5 \times 4) + (4 \times 5) + (0 \times 0) = 20 + 20 = 40
-   $$
+   $$A \cdot B = (5 \times 4) + (4 \times 5) + (0 \times 0) = 20 + 20 = 40$$
 
 3. Hitung panjang dari masing-masing vektor:
    $$
