@@ -566,11 +566,7 @@ Berikut merupakan hasil visualisasi Distribusi Rating Eksplisit Buku (1-10)
 - Hasil dari visualisasi diatas, pengguna yang paling banyak berdasarkan kota berasal dari London.
 
 ## Modeling
-### Model Development: Sistem Rekomendasi Berdasarkan Popularitas Buku
-
-# README
-
-## Modelling and Results
+### Model Development: Sistem Rekomendasi Berdasarkan Popularitas Buku dan Hasil
 
 ### Popularity-Based Recommender System
 
