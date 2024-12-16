@@ -501,9 +501,9 @@ Contoh dataset yang telah digabung:
 
 ## Data Visualization
 
-1. Top 10 Penerbit Berdasarkan Jumlah Buku
+1. Distribusi Jumlah Buku Berdasarkan Tahun Publikasi
 
-![alt text](image.png)
+![image](https://github.com/user-attachments/assets/ded57e38-7c37-40fc-a88d-1f161646f4ac)
 
 Visualisasi di atas menunjukkan distribusi jumlah buku berdasarkan tahun publikasi. Sebelum visualisasi ini dibuat, masalah terkait tahun publikasi yang tidak valid, seperti tahun outlier di masa depan (>2020) atau tahun 0, telah diatasi dengan mengganti nilai tersebut menjadi tahun 2002, yang merupakan tahun publikasi paling umum dalam dataset ini. Dengan demikian, data yang divisualisasikan mencerminkan distribusi yang lebih konsisten dan bebas dari outlier.
 
@@ -511,57 +511,57 @@ Melalui grafik ini, saya dapat mengidentifikasi tren penerbitan buku dari waktu 
 
 2. Top 10 Penerbit Berdasarkan Jumlah Buku
 
-![alt text](image-1.png)
+![image](https://github.com/user-attachments/assets/1e0eccc1-2b0c-45f6-ae11-17d840acadfa)
 
 - Harlequin merupakan penerbit buku terbanyak pertama dengan jumlah buku 7535 dengan perbedaan yang sangat signifikan dengan penerbit buku terbanyak kedua yaitu Silhouette dengan 4220 buku.
 
 3. Top 10 Penulis Berdasarkan Jumlah Buku
 
-![alt text](image-2.png)
+![image](https://github.com/user-attachments/assets/0be86863-2c7b-49f3-8eeb-b14f13adb368)
 
 - Penulis buku terbanyak pertama adalah Agatha Christie sebanyak 632 buku
 
 4. Jumlah Buku Berdasarkan Tahun Publikasi dan Penerbit
 
-![alt text](image-3.png)
+![image](https://github.com/user-attachments/assets/ea6b9e80-9cba-4aa7-9eb9-f110cd4f4b9c)
 
 - Berdasarkan hasil visualisasi diatas, penerbit terbanyak pertama yaitu Harlequin menerbitkan buku terbanyaknya pada tahun 2003
 
 5. Jumlah Buku Berdasarkan Judul Buku (Top 10)
 
-![alt text](image-4.png)
+![image](https://github.com/user-attachments/assets/113110d9-dbb5-4270-bf95-1fd77161f4c1)
 
 - Buku yang sama, meskipun ditulis oleh penulis yang sama, sering kali memiliki beberapa ISBN unik. Ini dapat terjadi karena buku tersebut diterbitkan oleh penerbit yang berbeda atau diterbitkan dalam tahun yang berbeda. Dalam konteks membangun sistem rekomendasi buku, hal ini menjadi penting untuk diperhatikan. Jika buku yang sama diidentifikasi dengan ISBN yang berbeda, ini bisa menyebabkan rekomendasi menjadi kurang akurat atau berulang. Oleh karena itu, nantinya mungkin saya perlu menyatukan ISBN untuk edisi-edisi buku yang sama agar sistem rekomendasi dapat bekerja lebih optimal. Namun, langkah ini akan dipertimbangkan lebih lanjut selama proses pengembangan sistem rekomendasi.
 
 6. Distribusi Jumlah Rating Pengguna yang Kurang dari 50
 
-![alt text](image-5.png)
+![image](https://github.com/user-attachments/assets/4a88e999-d0ea-419e-8c17-f76ec128b3ef)
 
 - Histogram ini menunjukkan bahwa sebagian besar pengguna memberikan sedikit rating, khususnya pengguna dengan hanya 1 atau 2 rating. Pengguna dengan jumlah rating rendah ini mendominasi distribusi, sementara hanya sebagian kecil pengguna yang memberikan banyak rating. Pengguna yang memberikan sedikit rating mungkin tidak memberikan gambaran yang cukup kuat tentang preferensi mereka, yang menjadi perhatian penting dalam pengembangan sistem rekomendasi, karena rekomendasi yang diberikan berdasarkan rating terbatas dapat kurang akurat.
 
 Hal ini menjadi jelas jika saya membuat histogram yang sama dengan batas untuk pengguna dengan minimal 1000 ratings.
 
-![alt text](image-6.png)
+![image](https://github.com/user-attachments/assets/e45c9cce-08b8-4a92-9d66-2dbf8a706473)
 
 7. Distribusi Rating Buku
 
-![alt text](image-7.png)
+![image](https://github.com/user-attachments/assets/a79f3c16-8ced-4f3f-af19-6a9f485363d8)
 
 Hasil visualisasi menunjukkan bahwa sebagian besar entri memiliki rating 0, yang dalam konteks ini diartikan sebagai rating implisit. Rating implisit berbeda dengan rating eksplisit karena rating 0 ini tidak menunjukkan penilaian yang eksplisit dari pengguna, melainkan sebuah interaksi (positif atau negatif) antara pengguna dan buku tersebut. Sebagai langkah pemodelan, saya hanya akan fokus pada rating eksplisit (nilai dari 1 hingga 10), dan oleh karena itu, entri dengan rating 0 akan dihapus.
 
 Berikut merupakan hasil visualisasi Distribusi Rating Eksplisit Buku (1-10)
 
-![alt text](image-8.png)
+![image](https://github.com/user-attachments/assets/6427215d-4ed6-4d52-b423-e37f456630f0)
 
 8. Jumlah Pengguna per Negara
 
-![alt text](image-9.png)
+![image](https://github.com/user-attachments/assets/eb355ac5-dce9-45f0-b462-29703f61a245)
 
 - Hasil dari visualisasi diatas, pengguna yang paling banyak berdasarkan negara berasal dari USA.
 
 9. Jumlah Pengguna per Kota
 
-![alt text](image-10.png)
+![image](https://github.com/user-attachments/assets/f6a18f5f-89e6-45d7-a791-dc0f7cd4fb21)
 
 - Hasil dari visualisasi diatas, pengguna yang paling banyak berdasarkan kota berasal dari London.
 
