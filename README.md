@@ -605,34 +605,34 @@ Berikut adalah 20 rekomendasi buku terpopuler yang diurutkan berdasarkan nilai r
 | The Five People You Meet in Heaven                | Mitch Albom           | 244            | 8.020492       |
 | Angels & Demons                                   | Dan Brown             | 310            | 8.016129       |
 
-# Collaborative Filtering: Item-Based Filtering
+### Model Development: Collaborative Filtering Item-Based Filtering dan Hasil
 
-## Deskripsi
+#### Deskripsi
 
 Sistem rekomendasi ini menggunakan pendekatan **Collaborative Filtering (Item-Based Filtering)** untuk merekomendasikan buku kepada pengguna. Dalam pendekatan ini, buku yang memiliki kesamaan rating dengan buku yang telah dibaca oleh pengguna sebelumnya akan direkomendasikan. Proses ini didasarkan pada **Cosine Similarity** untuk menghitung kesamaan antara buku-buku yang ada.
 
-### Langkah-langkah Proses
+#### Langkah-langkah Proses
 
-#### 1. Penyaringan Pengguna dan Buku
+1. Penyaringan Pengguna dan Buku
 Pada langkah pertama, dilakukan penyaringan terhadap data untuk memfokuskan pada buku-buku yang lebih populer dan pengguna yang lebih aktif. Kriteria yang digunakan adalah:
 - **Jumlah buku yang dibaca oleh pengguna**: Pengguna yang memiliki lebih dari 50 buku yang dibaca dipertimbangkan sebagai pengguna aktif.
 - **Jumlah rating yang diterima buku**: Buku yang menerima lebih dari 20 rating dianggap populer.
 
 Data yang memenuhi kriteria ini kemudian dipilih untuk analisis lebih lanjut.
 
-#### 2. Pembuatan Pivot Table
+2. Pembuatan Pivot Table
 Setelah penyaringan, dibuatlah pivot table yang berisi data rating untuk setiap buku dan setiap pengguna. Rating yang kosong diisi dengan nilai nol (0).
 
-#### 3. Perhitungan Cosine Similarity
+3. Perhitungan Cosine Similarity
 Setelah pivot table terbentuk, digunakan **Cosine Similarity** untuk mengukur tingkat kesamaan antara buku-buku yang ada. Cosine Similarity adalah ukuran yang menunjukkan seberapa mirip dua buku berdasarkan pola rating pengguna.
 
-#### 4. Rekomendasi Buku
+4. Rekomendasi Buku
 Fungsi `recommend_books` digunakan untuk memberikan rekomendasi berdasarkan buku yang diberikan. Fungsi ini:
 - Mencari kesamaan antara buku yang diminta dengan buku lainnya.
 - Mengurutkan buku-buku yang paling mirip dengan buku yang diminta berdasarkan nilai Cosine Similarity.
 - Mengembalikan daftar buku yang paling relevan sebagai rekomendasi.
 
-### Contoh Penggunaan
+#### Contoh Penggunaan
 
 Untuk memberikan rekomendasi buku berdasarkan judul buku, misalnya **"Harry Potter and the Sorcerer's Stone"**, kita bisa menggunakan kode berikut:
 
@@ -661,4 +661,60 @@ Rekomendasi untuk buku 'Harry Potter and the Sorcerer's Stone (Harry Potter (Pap
 8. A Time to Kill
 9. The Joy Luck Club
 10. Bridget Jones's Diary
+```
+
+### Model Development: Content-Based Filtering Berdasarkan Popularitas Judul Buku dan Hasil
+
+#### Deskripsi
+
+Proyek ini mengimplementasikan sistem rekomendasi berbasis **Content-Based Filtering** untuk buku, di mana rekomendasi dihasilkan berdasarkan kesamaan judul buku. Sistem ini merekomendasikan buku berdasarkan konten judulnya dan popularitas buku tersebut, yang ditentukan oleh jumlah rating yang diterima.
+
+#### Langkah-Langkah yang Dilakukan
+
+1. Memfilter Buku Populer
+Buku dengan jumlah rating yang tinggi dianggap populer. Ambang batas untuk menganggap buku sebagai "populer" ditetapkan pada 80 rating. Langkah-langkah yang dilakukan adalah:
+- **Menghitung Total Rating**: Jumlah rating untuk setiap buku dihitung menggunakan kolom `Book-Rating`.
+- **Memfilter Buku Populer**: Hanya buku dengan jumlah rating yang lebih besar dari atau sama dengan ambang batas yang dipilih sebagai buku populer.
+
+2. Pembuatan Matriks TF-IDF
+Matriks **TF-IDF (Term Frequency-Inverse Document Frequency)** dibuat menggunakan judul buku:
+- **n-gram**: Unigram dan bigram (1-gram dan 2-gram) dipertimbangkan untuk menangkap konteks lebih banyak dari judul buku.
+- **Stopwords**: Kata-kata umum dalam bahasa Inggris yang tidak penting (stopwords) dihilangkan agar kata yang relevan lebih berpengaruh.
+- Matriks ini merepresentasikan pentingnya setiap kata/frasa dalam judul buku dibandingkan dengan seluruh koleksi buku populer.
+
+3. Perhitungan Cosine Similarity
+Setelah matriks TF-IDF dibuat, **Cosine Similarity** dihitung untuk mengukur seberapa mirip dua buku berdasarkan judulnya. Buku dengan nilai cosine similarity yang lebih tinggi dianggap lebih mirip satu sama lain.
+
+4. Fungsi Rekomendasi Buku
+Fungsi `recommend_books` menghasilkan rekomendasi buku berdasarkan kesamaan judul dengan buku lainnya:
+- Diberikan nama buku, fungsi ini akan mencari **ISBN** yang sesuai.
+- Fungsi kemudian menghitung cosine similarity antara buku yang dipilih dengan semua buku lainnya dalam daftar buku populer.
+- Buku dengan skor kesamaan tertinggi (N teratas) akan direkomendasikan, kecuali buku yang dipilih itu sendiri.
+
+#### Contoh Penggunaan
+
+Untuk mendapatkan rekomendasi buku berdasarkan judul buku tertentu, Anda dapat menggunakan kode berikut:
+
+```python
+bookName = "Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))"
+recommend_books(bookName)
+```
+
+**Output:**
+
+Berikut adalah contoh output dari rekomendasi buku berdasarkan judul yang diberikan:
+
+```
+Recommended Books based on 'Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))':
+
+1. Harry Potter and the Sorcerer's Stone (Book 1)
+2. Harry Potter and the Goblet of Fire (Book 4)
+3. Harry Potter and the Chamber of Secrets (Book 2)
+4. Harry Potter and the Prisoner of Azkaban (Book 3)
+5. Harry Potter and the Order of the Phoenix (Book 5)
+6. From Potter's Field
+7. Big Stone Gap: A Novel (Ballantine Reader's Circle)
+8. Where the Heart Is (Oprah's Book Club (Paperback))
+9. She's Come Undone (Oprah's Book Club (Paperback))
+10. The Book of Ruth (Oprah's Book Club (Paperback))
 ```
