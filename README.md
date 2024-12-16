@@ -605,3 +605,55 @@ Berikut adalah 20 rekomendasi buku terpopuler yang diurutkan berdasarkan nilai r
 | The Five People You Meet in Heaven                | Mitch Albom           | 244            | 8.020492       |
 | Angels & Demons                                   | Dan Brown             | 310            | 8.016129       |
 
+# Collaborative Filtering: Item-Based Filtering
+
+## Deskripsi
+
+Sistem rekomendasi ini menggunakan pendekatan **Collaborative Filtering (Item-Based Filtering)** untuk merekomendasikan buku kepada pengguna. Dalam pendekatan ini, buku yang memiliki kesamaan rating dengan buku yang telah dibaca oleh pengguna sebelumnya akan direkomendasikan. Proses ini didasarkan pada **Cosine Similarity** untuk menghitung kesamaan antara buku-buku yang ada.
+
+### Langkah-langkah Proses
+
+#### 1. Penyaringan Pengguna dan Buku
+Pada langkah pertama, dilakukan penyaringan terhadap data untuk memfokuskan pada buku-buku yang lebih populer dan pengguna yang lebih aktif. Kriteria yang digunakan adalah:
+- **Jumlah buku yang dibaca oleh pengguna**: Pengguna yang memiliki lebih dari 50 buku yang dibaca dipertimbangkan sebagai pengguna aktif.
+- **Jumlah rating yang diterima buku**: Buku yang menerima lebih dari 20 rating dianggap populer.
+
+Data yang memenuhi kriteria ini kemudian dipilih untuk analisis lebih lanjut.
+
+#### 2. Pembuatan Pivot Table
+Setelah penyaringan, dibuatlah pivot table yang berisi data rating untuk setiap buku dan setiap pengguna. Rating yang kosong diisi dengan nilai nol (0).
+
+#### 3. Perhitungan Cosine Similarity
+Setelah pivot table terbentuk, digunakan **Cosine Similarity** untuk mengukur tingkat kesamaan antara buku-buku yang ada. Cosine Similarity adalah ukuran yang menunjukkan seberapa mirip dua buku berdasarkan pola rating pengguna.
+
+#### 4. Rekomendasi Buku
+Fungsi `recommend_books` digunakan untuk memberikan rekomendasi berdasarkan buku yang diberikan. Fungsi ini:
+- Mencari kesamaan antara buku yang diminta dengan buku lainnya.
+- Mengurutkan buku-buku yang paling mirip dengan buku yang diminta berdasarkan nilai Cosine Similarity.
+- Mengembalikan daftar buku yang paling relevan sebagai rekomendasi.
+
+### Contoh Penggunaan
+
+Untuk memberikan rekomendasi buku berdasarkan judul buku, misalnya **"Harry Potter and the Sorcerer's Stone"**, kita bisa menggunakan kode berikut:
+
+```python
+book_name = "Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))"
+recommendations = recommend_books(book_name, pt, similarity_score, n=10)
+
+print(f"Rekomendasi untuk buku '{book_name}':")
+for idx, rec in enumerate(recommendations, 1):
+    print(f"{idx}. {rec}")
+
+```
+Rekomendasi untuk buku 'Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))':
+1. Harry Potter and the Chamber of Secrets (Book 2)
+2. Harry Potter and the Prisoner of Azkaban (Book 3)
+3. Harry Potter and the Goblet of Fire (Book 4)
+4. Harry Potter and the Order of the Phoenix (Book 5)
+5. Fried Green Tomatoes at the Whistle Stop Cafe
+6. Anne of Green Gables (Anne of Green Gables Novels (Paperback))
+7. Anne of Avonlea (Anne of Green Gables Novels (Paperback))
+8. A Time to Kill
+9. The Joy Luck Club
+10. Bridget Jones's Diary
+```
