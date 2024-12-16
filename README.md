@@ -824,7 +824,7 @@ Dimana:
 
    $$A \cdot B = (5 \times 4) + (4 \times 5) + (0 \times 0) = 20 + 20 = 40$$
 
-3. Hitung panjang dari masing-masing vektor:\n
+3. Hitung panjang dari masing-masing vektor:
 
    $$\|A\| = \sqrt{5^2 + 4^2 + 0^2} = \sqrt{25 + 16} = \sqrt{41}$$
 
