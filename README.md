@@ -107,6 +107,133 @@ File ini berisi data penilaian yang diberikan oleh pengguna terhadap buku-buku. 
 - **ISBN**: ISBN buku yang diberi rating.
 - **Book-Rating**: Rating yang diberikan oleh pengguna terhadap buku. Nilai ini berada dalam rentang 1-10 (rating eksplisit) atau 0 (rating implisit).
 
+## Data Preparation
+
+### Books Dataset
+
+#### Overview
+Proses data preparation dilakukan untuk memastikan dataset **Books** bersih, konsisten, dan siap digunakan untuk analisis atau pengembangan model rekomendasi. Berikut adalah langkah-langkah yang dilakukan untuk memproses data:
+
+---
+
+#### 1. Drop URL Columns
+Dataset **Books** memiliki tiga kolom yang berisi URL gambar sampul buku dalam berbagai ukuran (**Image-URL-S**, **Image-URL-M**, dan **Image-URL-L**). Karena kolom ini tidak relevan untuk analisis, kami menghapusnya:
+
+```python
+books.drop(['Image-URL-S', 'Image-URL-M', 'Image-URL-L'], axis=1, inplace=True)
+```
+
+---
+
+#### 2. Handle Missing Values
+##### a. Cek Nilai Kosong
+Melakukan pengecekan untuk mengetahui jumlah nilai kosong (NaN) di setiap kolom:
+
+```python
+books.isnull().sum()
+```
+
+**Output:**
+```
+ISBN                   0
+Book-Title             0
+Book-Author            2
+Year-Of-Publication    0
+Publisher              2
+```
+
+##### b. Mengisi Nilai Kosong
+- Nilai kosong pada kolom **Book-Author** dan **Publisher** diisi dengan string **'Other'** untuk menjaga konsistensi data.
+
+```python
+books['Book-Author'] = books['Book-Author'].fillna('Other')
+books['Publisher'] = books['Publisher'].fillna('Other')
+```
+
+---
+
+#### 3. Perbaikan Kolom `Year-Of-Publication`
+##### a. Identifikasi Masalah
+Kolom **Year-Of-Publication** memiliki tipe data **object** dan terdapat beberapa masalah, seperti:
+- Nilai **0** (yang tidak valid untuk tahun).
+- Nama seperti "Gallimard" dan "DK Publishing Inc" yang salah dimasukkan ke kolom ini.
+
+##### b. Perbaikan Spesifik
+Melakukan perbaikan pada baris yang diketahui memiliki masalah data:
+
+```python
+# ISBN: '078946697X'
+books.loc[books['ISBN'] == '078946697X', 'Publisher'] = 'DK Publishing Inc'
+books.loc[books['ISBN'] == '078946697X', 'Book-Author'] = 'Michael Teitelbaum'
+books.loc[books['ISBN'] == '078946697X', 'Year-Of-Publication'] = 2000
+books.loc[books['ISBN'] == '078946697X', 'Book-Title'] = 'DK Readers: Creating the X-Men, How It All Began (Level 4: Proficient Readers)'
+
+# ISBN: '0789466953'
+books.loc[books['ISBN'] == '0789466953', 'Publisher'] = 'DK Publishing Inc'
+books.loc[books['ISBN'] == '0789466953', 'Book-Author'] = 'James Buckley'
+books.loc[books['ISBN'] == '0789466953', 'Year-Of-Publication'] = 2000
+books.loc[books['ISBN'] == '0789466953', 'Book-Title'] = 'DK Readers: Creating the X-Men, How Comic Books Come to Life (Level 4: Proficient Readers)'
+
+# ISBN: '2070426769'
+books.loc[books['ISBN'] == '2070426769', 'Publisher'] = 'Gallimard'
+books.loc[books['ISBN'] == '2070426769', 'Book-Author'] = 'Jean-Marie Gustave Le Clézio'
+books.loc[books['ISBN'] == '2070426769', 'Year-Of-Publication'] = 2003
+books.loc[books['ISBN'] == '2070426769', 'Book-Title'] = 'Peuple du ciel - Suivi de Les bergers'
+```
+
+##### c. Normalisasi Tahun
+Melakukan analisis untuk jumlah publikasi yang memiliki:
+- **Year-Of-Publication** lebih dari 2020.
+- **Year-Of-Publication** sama dengan 0.
+
+```python
+above_2020 = books[books['Year-Of-Publication'] > 2020]
+count_above_2020 = above_2020.shape[0]
+
+equal_to_0 = books[books['Year-Of-Publication'] == 0]
+count_equal_to_0 = equal_to_0.shape[0]
+
+total_count = books.shape[0]
+
+print(f"Jumlah publikasi dengan Year-Of-Publication > 2020: {count_above_2020}")
+print(f"Jumlah publikasi dengan Year-Of-Publication = 0: {count_equal_to_0}")
+print(f"Total publikasi: {total_count}")
+```
+
+**Output:**
+```
+Jumlah publikasi dengan Year-Of-Publication > 2020: 14
+Jumlah publikasi dengan Year-Of-Publication = 0: 4618
+Total publikasi: 271360
+```
+
+##### d. Normalisasi Nilai Tidak Valid
+Mengganti nilai **Year-Of-Publication** yang lebih dari 2020 atau sama dengan 0 menjadi 2002 (tahun yang lebih masuk akal):
+
+```python
+books.loc[(books['Year-Of-Publication'] > 2020) | (books['Year-Of-Publication'] == 0), 'Year-Of-Publication'] = 2002
+```
+
+---
+
+#### 4. Normalisasi `Publisher`
+Melakukan normalisasi nilai pada kolom **Publisher** untuk mengganti karakter HTML seperti `&amp;` dengan karakter aslinya `&`:
+
+```python
+books.Publisher = books.Publisher.str.replace('&amp;', '&', regex=False)
+```
+
+---
+
+#### Final Output
+Setelah proses data preparation, dataset **Books** menjadi lebih bersih dan konsisten:
+- Kolom URL gambar dihapus.
+- Nilai kosong pada kolom **Book-Author** dan **Publisher** diisi dengan **'Other'**.
+- Kesalahan pada kolom **Year-Of-Publication** diperbaiki, dan nilai tidak valid diganti dengan 2002.
+- Normalisasi karakter HTML pada kolom **Publisher** selesai dilakukan.
+
+Dataset siap untuk analisis lebih lanjut atau pengembangan model rekomendasi.
+
 ## Data Visualization
 
 1. Top 10 Penerbit Berdasarkan Jumlah Buku
