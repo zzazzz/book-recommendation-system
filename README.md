@@ -478,6 +478,26 @@ Contoh dataset yang telah dibersihkan:
 
 Dataset kini siap untuk analisis lebih lanjut atau pemodelan.
 
+Setelah pada setiap dataset seperti Books, Ratings, dan Users telah bersih selanjutnya dilakukan penggabungan datasets dalam satu tabel.
+
+```python
+# Joining books and user ratings into one table 
+dataset = ratings.merge(books, on = 'ISBN')
+dataset = dataset.merge(users, on = 'User-ID')
+dataset = dataset[dataset['Book-Rating'] != 0]
+dataset.head
+```
+
+Contoh dataset yang telah digabung:
+
+| User-ID | ISBN         | Book-Rating | Book-Title                                      | Book-Author               | Year-Of-Publication | Publisher              | Age | City        | Region  | Country |
+|---------|--------------|-------------|------------------------------------------------|---------------------------|---------------------|------------------------|-----|-------------|---------|---------|
+| 1       | 034545104X   | 5           | Flesh Tones: A Novel                           | M. J. Rose               | 2002                | Ballantine Books       | 23  | cincinnati  | ohio    | usa     |
+| 2       | 0812533550   | 9           | Ender's Game (Ender Wiggins Saga (Paperback))  | Orson Scott Card         | 1986                | Tor Books              | 23  | cincinnati  | ohio    | usa     |
+| 3       | 0679745580   | 8           | In Cold Blood (Vintage International)          | TRUMAN CAPOTE            | 1994                | Vintage                | 23  | cincinnati  | ohio    | usa     |
+| 4       | 0060173289   | 9           | Divine Secrets of the Ya-Ya Sisterhood : A Novel | Rebecca Wells           | 1996                | HarperCollins          | 23  | cincinnati  | ohio    | usa     |
+| 5       | 0385482388   | 5           | The Mistress of Spices                        | Chitra Banerjee Divakaruni | 1998               | Anchor Books/Doubleday | 23  | cincinnati  | ohio    | usa     |
+
 
 ## Data Visualization
 
