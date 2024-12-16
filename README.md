@@ -565,3 +565,47 @@ Berikut merupakan hasil visualisasi Distribusi Rating Eksplisit Buku (1-10)
 
 - Hasil dari visualisasi diatas, pengguna yang paling banyak berdasarkan kota berasal dari London.
 
+## Modeling
+### Model Development: Sistem Rekomendasi Berdasarkan Popularitas Buku
+
+# README
+
+## Modelling and Results
+
+### Popularity-Based Recommender System
+
+Pada proyek ini, rekomendasi buku dibuat berdasarkan popularitas buku, yang ditentukan oleh dua kriteria:
+1. **Jumlah orang yang membaca buku tersebut** (`num_rating > 200`).
+2. **Rata-rata rating yang diperoleh buku tersebut** (`avg_rating`).
+
+Proses ini menggunakan langkah-langkah berikut:
+
+1. Data buku dikelompokkan berdasarkan kolom `Book-Title`, kemudian dihitung jumlah rating (`num_rating`) dan rata-rata rating (`avg_rating`) untuk setiap buku.
+2. Buku dengan jumlah rating lebih dari 200 dipilih, lalu diurutkan berdasarkan nilai rata-rata rating secara menurun.
+3. Data yang dihasilkan dihubungkan dengan data buku asli untuk menambahkan informasi pengarang buku dan gambar.
+
+Berikut adalah 20 rekomendasi buku terpopuler yang diurutkan berdasarkan nilai rata-rata rating (avg_rating):
+
+| **Book-Title**                                      | **Book-Author**       | **num_rating** | **avg_rating** |
+|-----------------------------------------------------|-----------------------|----------------|----------------|
+| Harry Potter and the Goblet of Fire (Book 4)       | J. K. Rowling         | 247            | 9.125506       |
+| Harry Potter and the Order of the Phoenix (Book 5) | J. K. Rowling         | 211            | 9.047393       |
+| Harry Potter and the Prisoner of Azkaban (Book 3)  | J. K. Rowling         | 277            | 9.043321       |
+| To Kill a Mockingbird                              | Harper Lee            | 267            | 8.977528       |
+| Harry Potter and the Sorcerer's Stone (Book 1)     | J. K. Rowling         | 315            | 8.936508       |
+| The Fellowship of the Ring (The Lord of the Rings)| J.R.R. Tolkien        | 205            | 8.882927       |
+| Harry Potter and the Chamber of Secrets (Book 2)   | J. K. Rowling         | 326            | 8.840491       |
+| Tuesdays with Morrie                               | Mitch Albom           | 250            | 8.588000       |
+| Fahrenheit 451                                     | Ray Bradbury          | 204            | 8.549020       |
+| The Secret Life of Bees                            | Sue Monk Kidd         | 406            | 8.477833       |
+| The Da Vinci Code                                  | Dan Brown             | 494            | 8.439271       |
+| The Lovely Bones: A Novel                         | Alice Sebold          | 707            | 8.185290       |
+| The Red Tent                                       | Anita Diamant         | 383            | 8.182768       |
+| The Poisonwood Bible: A Novel                     | Barbara Kingsolver    | 218            | 8.178899       |
+| The Joy Luck Club                                 | Amy Tan               | 208            | 8.153846       |
+| Where the Heart Is                                | Billie Letts          | 295            | 8.142373       |
+| Life of Pi                                        | Yann Martel           | 336            | 8.080357       |
+| Good in Bed                                       | Jennifer Weiner       | 247            | 8.044534       |
+| The Five People You Meet in Heaven                | Mitch Albom           | 244            | 8.020492       |
+| Angels & Demons                                   | Dan Brown             | 310            | 8.016129       |
+
