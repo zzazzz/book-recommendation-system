@@ -645,7 +645,7 @@ for idx, rec in enumerate(recommendations, 1):
     print(f"{idx}. {rec}")
 
 ```
-### Output
+**Output:**
 
 Berikut adalah contoh output dari rekomendasi buku berdasarkan judul yang diberikan:
 
