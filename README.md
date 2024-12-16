@@ -814,28 +814,30 @@ Dimana:
 
   Dalam hal ini, **Cosine Similarity** antara Buku A dan Buku B dapat dihitung untuk menentukan seberapa mirip kedua buku ini berdasarkan rating yang diberikan oleh pengguna.
 
-  **Langkah-langkah**:
-  1. Representasikan rating buku sebagai vektor:
-     - Vektor Buku A = [5, 4, 0]
-     - Vektor Buku B = [4, 5, 0]
+### Langkah-langkah:
+
+1. Representasikan rating buku sebagai vektor:
+   - Vektor Buku A = [5, 4, 0]
+   - Vektor Buku B = [4, 5, 0]
   
-  2. Hitung perkalian dot antara kedua vektor:
-     \[
-     A \cdot B = (5 \times 4) + (4 \times 5) + (0 \times 0) = 20 + 20 = 40
-     \]
+2. Hitung perkalian dot antara kedua vektor:
+   $$
+   A \cdot B = (5 \times 4) + (4 \times 5) + (0 \times 0) = 20 + 20 = 40
+   $$
 
-  3. Hitung panjang dari masing-masing vektor:
-     \[
-     \|A\| = \sqrt{5^2 + 4^2 + 0^2} = \sqrt{25 + 16} = \sqrt{41}
-     \]
-     \[
-     \|B\| = \sqrt{4^2 + 5^2 + 0^2} = \sqrt{16 + 25} = \sqrt{41}
-     \]
+3. Hitung panjang dari masing-masing vektor:
+   $$
+   \|A\| = \sqrt{5^2 + 4^2 + 0^2} = \sqrt{25 + 16} = \sqrt{41}
+   $$ 
+   $$
+   \|B\| = \sqrt{4^2 + 5^2 + 0^2} = \sqrt{16 + 25} = \sqrt{41}
+   $$
 
-  4. Hitung **Cosine Similarity**:
-     \[
-     \text{Cosine Similarity}(A, B) = \frac{A \cdot B}{\|A\| \|B\|} = \frac{40}{\sqrt{41} \times \sqrt{41}} = \frac{40}{41} \approx 0.9756
-     \]
+4. Hitung **Cosine Similarity**:
+   $$
+   \text{Cosine Similarity}(A, B) = \frac{A \cdot B}{\|A\| \|B\|} = \frac{40}{\sqrt{41} \times \sqrt{41}} = \frac{40}{41} \approx 0.9756
+   $$
+
   
   Dengan nilai **Cosine Similarity** mendekati 1, ini menunjukkan bahwa Buku A dan Buku B sangat mirip dalam hal rating pengguna dan, oleh karena itu, dapat direkomendasikan bersama-sama.
 
