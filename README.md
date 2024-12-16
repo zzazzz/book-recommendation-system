@@ -645,6 +645,11 @@ for idx, rec in enumerate(recommendations, 1):
     print(f"{idx}. {rec}")
 
 ```
+### Output
+
+Berikut adalah contoh output dari rekomendasi buku berdasarkan judul yang diberikan:
+
+```
 Rekomendasi untuk buku 'Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))':
 1. Harry Potter and the Chamber of Secrets (Book 2)
 2. Harry Potter and the Prisoner of Azkaban (Book 3)
