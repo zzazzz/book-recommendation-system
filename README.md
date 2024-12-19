@@ -128,6 +128,8 @@ File ini berisi data penilaian yang diberikan oleh pengguna terhadap buku-buku. 
 - Tidak ada nilai kosong pada setiap kolom.
 - Tidak terdapat data duplikat.
 
+[Sumber dataset](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset)
+
 ## Data Preparation
 
 ### 1. Books Dataset
@@ -721,7 +723,7 @@ bookName = "Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))"
 recommend_books(bookName)
 ```
 
-**Output:**
+**Output 2: Content Based Filtering Berdasarkan Popularitas Judul Buku**
 
 Berikut adalah contoh output dari rekomendasi buku berdasarkan judul yang diberikan:
 
@@ -739,6 +741,8 @@ Recommended Books based on 'Harry Potter and the Sorcerer's Stone (Harry Potter 
 9. She's Come Undone (Oprah's Book Club (Paperback))
 10. The Book of Ruth (Oprah's Book Club (Paperback))
 ```
+
+### Model Development: Content-Based Filtering Berdasarkan Rating Rata-Rata Buku dan Hasil
 
 #### Deskripsi
 
@@ -775,7 +779,7 @@ bookName = "Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))"
 recommend_books(bookName)
 ```
 
-**Output:**
+**Output 3: Content Based Filtering Berdasarkan Rating Rata-Rata Buku**
 
 Berikut adalah contoh output untuk buku "Harry Potter and the Sorcerer's Stone":
 
@@ -907,6 +911,161 @@ Jumlah buku relevan yang tersedia: 6
 Recall: 0.67
 ```
 
-### Kesimpulan
+## Evaluasi Pada Content Based Filtering Berdasarkan Popularitas Judul Buku
 
-**Cosine Similarity** adalah metrik yang kuat untuk mengukur kesamaan antar item dalam sistem rekomendasi buku. Pengguna yang menyukai suatu buku dengan pola rating tertentu atau jenis konten tertentu kemungkinan akan tertarik pada buku-buku dengan kesamaan tinggi yang dihitung melalui Cosine Similarity. Menggunakan metrik ini, sistem dapat memberikan rekomendasi yang lebih relevan dan sesuai dengan preferensi pengguna.
+Pada **Output 2: Content Based Filtering Berdasarkan Popularitas Judul Buku** dilakukan evaluasi yang memiliki relevansi dengan penulis buku sama. Setelah membaca buku Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback)) karangan J.K Rowling kemudian hasil rekomendasi ini mendapatkan nilai precision dengan menjalakan kode program berikut:
+
+```python
+# Mengevaluasi relevansi berdasarkan penulis
+author = popular_books[popular_books['Book-Title'] == bookName]['Book-Author'].iloc[0]
+relevant_books = 0
+for book_title in recommended_books:
+    book_author = popular_books[popular_books['Book-Title'] == book_title]['Book-Author'].iloc[0]
+    if book_author == author:
+        relevant_books += 1
+
+# Menghitung presisi
+precision = relevant_books / len(recommendations)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan: {relevant_books}")
+print(f"Presisi: {precision:.2f}")
+```
+
+**Output:**
+
+```
+Jumlah buku relevan: 5
+Presisi: 0.50
+```
+Kemudian saya mencari total buku relevan yang ada berdasarkan penulis dengan menjalankan kode program berikut:
+
+```python
+# Mencari buku-buku lain yang ditulis oleh penulis yang sama
+books_by_author = popular_books[popular_books['Book-Author'] == author]['Book-Title'].unique()
+
+print(f"Buku-buku yang ditulis oleh {author}:")
+for idx, book in enumerate(books_by_author, 1):
+    print(f"{idx}. {book}")
+```
+
+**Output:**
+
+```
+Buku-buku yang ditulis oleh J. K. Rowling:
+1. Harry Potter and the Chamber of Secrets (Book 2)
+2. Harry Potter and the Sorcerer's Stone (Book 1)
+3. Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))
+4. Harry Potter and the Prisoner of Azkaban (Book 3)
+5. Harry Potter and the Goblet of Fire (Book 4)
+6. Harry Potter and the Order of the Phoenix (Book 5)
+```
+Selanjutnya adalah menghitung nilai Recall dengan menjalankan kode program berikut:
+
+```python
+# Langkah 4: Mengevaluasi relevansi berdasarkan penulis dalam top-k rekomendasi
+relevant_books = 0
+for book_title in recommended_books:
+    if book_title in books_by_author:
+        relevant_books += 1
+
+# Langkah 5: Menghitung recall
+recall = relevant_books / len(books_by_author)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan dalam top-k rekomendasi: {relevant_books}")
+print(f"Jumlah buku relevan yang tersedia: {len(books_by_author)}")
+print(f"Recall: {recall:.2f}")
+```
+
+**Output:**
+```
+Jumlah buku relevan dalam top-k rekomendasi: 5
+Jumlah buku relevan yang tersedia: 6
+Recall: 0.83
+```
+## Evaluasi Pada Content Based Filtering Berdasarkan Rating Rata-Rata Buku
+
+Pada **Output 3: Content Based Filtering Berdasarkan Rating Rata-Rata Buku** dilakukan evaluasi yang memiliki relevansi dengan penulis buku sama. Setelah membaca buku Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback)) karangan J.K Rowling kemudian hasil rekomendasi ini mendapatkan nilai precision dengan menjalakan kode program berikut:
+
+```python
+# Mengevaluasi relevansi berdasarkan penulis
+author = popular_books[popular_books['Book-Title'] == bookName]['Book-Author'].iloc[0]
+relevant_books = 0
+for book_title in recommendations['Book-Title']:
+    book_author = popular_books[popular_books['Book-Title'] == book_title]['Book-Author'].iloc[0]
+    if book_author == author:
+        relevant_books += 1
+
+# Menghitung presisi
+precision = relevant_books / len(recommendations)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan: {relevant_books}")
+print(f"Presisi: {precision:.2f}")
+```
+
+**Output:**
+
+```
+Jumlah buku relevan: 5
+Presisi: 0.50
+```
+Kemudian saya mencari total buku relevan yang ada berdasarkan penulis dengan menjalankan kode program berikut:
+
+```python
+# Mencari buku-buku lain yang ditulis oleh penulis yang sama
+books_by_author = popular_books[popular_books['Book-Author'] == author]['Book-Title'].unique()
+
+print(f"Buku-buku yang ditulis oleh {author}:")
+for idx, book in enumerate(books_by_author, 1):
+    print(f"{idx}. {book}")
+```
+
+**Output:**
+
+```
+Buku-buku yang ditulis oleh J. K. Rowling:
+1. Harry Potter and the Goblet of Fire (Book 4)
+2. Harry Potter and the Sorcerer's Stone (Book 1)
+3. Harry Potter and the Order of the Phoenix (Book 5)
+4. Harry Potter and the Prisoner of Azkaban (Book 3)
+5. Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))
+6. Harry Potter and the Chamber of Secrets (Book 2)
+```
+Selanjutnya adalah menghitung nilai Recall dengan menjalankan kode program berikut:
+
+```python
+# Mengevaluasi relevansi berdasarkan penulis dalam top-k rekomendasi
+relevant_books = 0
+for book_title in recommended_books:
+    if book_title in books_by_author:
+        relevant_books += 1
+
+# Langkah 5: Menghitung recall
+recall = relevant_books / len(books_by_author)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan dalam top-k rekomendasi: {relevant_books}")
+print(f"Jumlah buku relevan yang tersedia: {len(books_by_author)}")
+print(f"Recall: {recall:.2f}")
+```
+
+**Output:**
+```
+Jumlah buku relevan dalam top-k rekomendasi: 5
+Jumlah buku relevan yang tersedia: 6
+Recall: 0.83
+```
+## Dampak terhadap Bisnis
+
+1. **Penyelesaian Masalah**:
+   - Sistem rekomendasi berhasil menjawab problem statement dengan memberikan rekomendasi buku yang relevan dan akurat berdasarkan preferensi pengguna.
+
+2. **Pencapaian Tujuan**:
+   - Model mampu memberikan rekomendasi yang relevan, meningkatkan kepuasan pengguna, dan mempercepat proses pencarian buku.
+
+3. **Dampak Solusi**:
+   - Popularitas buku dapat ditingkatkan dengan rekomendasi berbasis popularitas.
+   - Kesamaan konten memberikan rekomendasi yang lebih personal berdasarkan minat pengguna.
+   - Collaborative Filtering memperkaya pengalaman pengguna dengan rekomendasi berdasarkan preferensi kolektif.
