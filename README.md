@@ -805,17 +805,27 @@ Dalam sistem rekomendasi buku, penting untuk mengevaluasi seberapa baik sistem d
 **Precision** adalah proporsi dari rekomendasi yang relevan di antara semua rekomendasi yang diberikan oleh sistem. Precision mengukur akurasi sistem dalam merekomendasikan item yang relevan.
 
 Formula Precision:
-$$
-\text{Precision} = \frac{\text{Jumlah Buku Relevan yang Direkomendasikan}}{\text{Jumlah Buku yang Direkomendasikan}}
-$$
+
+$$\text{Precision} = \frac{\text{Jumlah Buku Relevan yang Direkomendasikan}}{\text{Jumlah Buku yang Direkomendasikan}}$$
 
 #### Recall
 **Recall** adalah proporsi dari buku relevan yang berhasil ditemukan oleh sistem dari seluruh buku relevan yang tersedia. Recall mengukur sejauh mana sistem dapat menemukan semua buku yang relevan.
 
 Formula Recall:
-$$
-\text{Recall} = \frac{\text{Jumlah Buku Relevan yang Direkomendasikan}}{\text{Jumlah Buku Relevan yang Seharusnya Direkomendasikan}}
-$$
+
+$$\text{Recall} = \frac{\text{Jumlah Buku Relevan yang Direkomendasikan}}{\text{Jumlah Buku Relevan yang Seharusnya Direkomendasikan}}$$
+
+## Mengapa Menggunakan Precision dan Recall dalam Sistem Rekomendasi?
+
+1. **Precision** berguna untuk mengetahui seberapa baik sistem merekomendasikan buku yang relevan kepada pengguna. Sistem dengan precision yang tinggi lebih mampu menghindari rekomendasi buku yang tidak relevan.
+   
+2. **Recall** berguna untuk mengetahui sejauh mana sistem berhasil menemukan semua buku yang relevan. Sistem dengan recall yang tinggi akan memberikan rekomendasi yang lebih lengkap, meskipun mungkin ada beberapa rekomendasi yang tidak relevan.
+
+### Perbandingan Precision dan Recall
+
+- Precision tinggi berarti sistem hanya merekomendasikan buku yang relevan, tetapi mungkin tidak merekomendasikan banyak buku.
+- Recall tinggi berarti sistem merekomendasikan banyak buku relevan, tetapi ada kemungkinan beberapa buku yang tidak relevan juga ikut terpilih.
+
 
 ### Kesimpulan
 
