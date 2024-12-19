@@ -71,23 +71,25 @@ ratings.head()
 # ## Univariate Exploratory Data Analysis and Data Preparation
 
 # %% [markdown]
-# ### Books
+# Pada tahapan ini dilakukan analisis dari setiap dataset yang saya miliki, yaitu dataset pada Books.csv, Rating.csv, dan Users.csv. Langkah-langkah dalam melakukan univariate EDA ini meliputi jumlah data pada setiap dataset, tipe data pada setiap dataset, kodisi missing value pada setiap dataset, dan kondisi duplikasi pada setiap dataset
+
+# %% [markdown]
+# #### Books Univariate Exploratory Data Analysis
 
 # %%
 books.columns
-
-# %%
-## Drop URL columns
-books.drop(['Image-URL-S', 'Image-URL-M', 'Image-URL-L'], axis=1, inplace=True)
-
-# %% [markdown]
-# Kode diatas menjelaskan membuang kolom yang tidak digunakan untuk analis lebih lanjut.
 
 # %%
 print("Books Data:", books.shape)
 
 # %% [markdown]
 # Total baris pada dataset books adalah 271360 dan total kolom adalah 5. 
+
+# %%
+books.info()
+
+# %% [markdown]
+# Hasil dari kodingan diatas, terdapat kesalah pada tipe data 'Year-Of-Publication' yang seharusnya adalah integer. Kesalahan ini nantinya akan diperbaiki pada saat proses data preparation.
 
 # %%
 ## Checking for null values
@@ -105,11 +107,30 @@ books[books['Book-Author'].isnull()]
 books[books['Publisher'].isnull()]
 
 # %%
+books.duplicated().sum()
+
+# %% [markdown]
+# Tidak ada data duplikat pada books.csv
+
+# %% [markdown]
+# #### Books Data Preparation
+
+# %%
+## Drop URL columns
+books.drop(['Image-URL-S', 'Image-URL-M', 'Image-URL-L'], axis=1, inplace=True)
+
+# %% [markdown]
+# Kode diatas menjelaskan membuang kolom yang tidak digunakan untuk analis lebih lanjut.
+
+# %%
 # Mengisi nilai kosong (NaN) pada kolom 'Book-Author' dengan string 'Other'.
 books['Book-Author'] = books['Book-Author'].fillna('Other')
 
 # Mengisi nilai kosong (NaN) pada kolom 'Publisher' dengan string 'Other'.
 books['Publisher'] = books['Publisher'].fillna('Other')
+
+# %% [markdown]
+# Kode diatas adalah mengisi kolom kosong pada kolom 'Book-Author' dan 'Publisher' dengan string Other
 
 # %%
 # books[books['Book-Author']=='Other']
@@ -287,6 +308,9 @@ print("The number of more than 2020s in Year-Of-Publication column after using m
 # %%
 books.isna().sum()
 
+# %% [markdown]
+# Memeriksa kembali untuk memastikan data yang sudah kita perbaiki tidak ada missing value.
+
 # %%
 books
 
@@ -299,6 +323,9 @@ books
 
 # %%
 books.Publisher = books.Publisher.str.replace('&amp;', '&', regex=False)
+
+# %% [markdown]
+# Selanjutnya adalah dilakukan visualisasi pada dataset Books.csv untuk memberikan insight dari setiap hasil visualisasi.
 
 # %%
 import matplotlib.pyplot as plt
@@ -315,7 +342,6 @@ plt.xticks(rotation=90)  # Rotate the x-axis labels for better visibility
 plt.xlabel('Tahun Publikasi')
 plt.ylabel('Jumlah Buku')
 plt.show()
-
 
 # %% [markdown]
 # Visualisasi di atas menunjukkan distribusi jumlah buku berdasarkan tahun publikasi. Sebelum visualisasi ini dibuat, masalah terkait tahun publikasi yang tidak valid, seperti tahun outlier di masa depan (>2020) atau tahun 0, telah diatasi dengan mengganti nilai tersebut menjadi tahun 2002, yang merupakan tahun publikasi paling umum dalam dataset ini. Dengan demikian, data yang divisualisasikan mencerminkan distribusi yang lebih konsisten dan bebas dari outlier.
@@ -393,7 +419,7 @@ books[books['Book-Title']=='Little Women']
 # Buku yang sama, meskipun ditulis oleh penulis yang sama, sering kali memiliki beberapa ISBN unik. Ini dapat terjadi karena buku tersebut diterbitkan oleh penerbit yang berbeda atau diterbitkan dalam tahun yang berbeda. Dalam konteks membangun sistem rekomendasi buku, hal ini menjadi penting untuk diperhatikan. Jika buku yang sama diidentifikasi dengan ISBN yang berbeda, ini bisa menyebabkan rekomendasi menjadi kurang akurat atau berulang. Oleh karena itu, nantinya mungkin saya perlu menyatukan ISBN untuk edisi-edisi buku yang sama agar sistem rekomendasi dapat bekerja lebih optimal. Namun, langkah ini akan dipertimbangkan lebih lanjut selama proses pengembangan sistem rekomendasi.
 
 # %% [markdown]
-# ### Ratings
+# ### Ratings Univariate Exploratory Data Analysis
 
 # %%
 print("Books-ratings:", ratings.shape)
@@ -420,6 +446,12 @@ ratings['Book-Rating'].unique()
 
 # %% [markdown]
 # Sintak ratings['Book-Rating'].unique() menampilkan nilai unik yang terdapat pada kolom Book-Rating dalam dataset ratings. Nilai yang muncul adalah angka antara 0 hingga 10, yang menunjukkan berbagai tingkat penilaian buku oleh pengguna. Nilai 0 biasanya mengindikasikan rating implisit atau ketidakadaan penilaian.
+
+# %% [markdown]
+# ### Ratings Data Preparation
+
+# %% [markdown]
+# Selanjutnya adalah dilakukan visualisasi pada dataset Ratings.csv untuk memberikan insight dari setiap hasil visualisasi.
 
 # %%
 # Visualisasi jumlah rating per buku (Top 10 Buku dengan Rating Terbanyak)
@@ -546,7 +578,7 @@ for i, v in enumerate(explicit_rating_counts):
 plt.show()
 
 # %% [markdown]
-# ### Users
+# ### Users Univariate Exploratory Data Analysis
 
 # %%
 print("Users Data:", users.shape)
@@ -557,6 +589,9 @@ print("Users Data:", users.shape)
 # %%
 ## Checking for null values
 users.isnull().sum() 
+
+# %% [markdown]
+# Terdapat nilai hilang pada kolom Age sebanyak 110762 data.
 
 # %%
 # Checking of duplicates 
@@ -577,7 +612,11 @@ print(sorted(list(users['Age'].unique())))
 
 # %% [markdown]
 # Berdasarkan hasil pengecekan nilai yang terdapat pada kolom 'Age', terdapat beberapa nilai yang tidak realistis, seperti usia lebih dari 80 atau kurang dari 10 tahun. Nilai usia seperti ini bisa dianggap sebagai outlier yang perlu ditangani agar tidak mempengaruhi analisis atau model yang dikembangkan.
-# 
+
+# %% [markdown]
+# ### Ratings Data Preparation
+
+# %% [markdown]
 # Untuk menangani outlier ini, langkah yang diambil adalah mengganti nilai usia yang lebih besar dari 80 dan lebih kecil dari 10 dengan nilai rata-rata usia yang valid. Pertama, data yang memiliki usia antara 10 hingga 80 diambil untuk menghitung rata-ratanya. Kemudian, usia yang lebih besar dari 80 atau lebih kecil dari 10 diganti dengan nilai rata-rata yang sudah dihitung tersebut. Selain itu, nilai yang kosong (null) pada kolom usia juga diisi dengan rata-rata tersebut, dan akhirnya kolom usia diubah menjadi tipe data integer untuk konsistensi.
 # 
 # Dengan cara ini, nilai yang tidak realistis atau hilang pada kolom usia dapat diperbaiki tanpa mengubah distribusi usia secara signifikan.
@@ -585,6 +624,9 @@ print(sorted(list(users['Age'].unique())))
 # %%
 required = users[users['Age'] <= 80]
 required = required[required['Age'] >= 10]
+
+# %% [markdown]
+# Langkah selanjutnya adalah menangani nilai outlier pada kolom usia dengan menggunakan data rata-rata usia. Jika usianya kurang dari 10 maka akan ganti dengan 35 dan jika usianya diatas 80 maka akan diganti dengan 35.
 
 # %%
 mean = round(required['Age'].mean())   
@@ -708,6 +750,9 @@ users = users.applymap(remove_special_characters)
 # %%
 users.Country.value_counts()
 
+# %% [markdown]
+# Selanjutnya adalah dilakukan visualisasi pada dataset Ratings.csv untuk memberikan insight dari setiap hasil visualisasi.
+
 # %%
 # Jumlah Pengguna per Negara
 country_counts = users['Country'].value_counts().head(10)
@@ -809,15 +854,15 @@ popular_df.describe()
 # %%
 # Popularity is based on the no of people read the book  ('num_raitng' > 200)
 # It is based on the rating it got. 
-popular_df = popular_df[popular_df['num_rating']>200].sort_values('avg_rating', ascending=False)
-popular_df
+popular = popular_df[popular_df['num_rating']>200].sort_values('avg_rating', ascending=False)
+popular
 
 # %%
-popular_df = popular_df.head(20)
+popular = popular.head(10)
 
 # %%
 # For the model deployment I need Book-title, Author, Image URL 
-popular_df = popular_df.merge(books, on = 'Book-Title').drop_duplicates('Book-Title')[['Book-Title', 
+popular = popular.merge(books, on = 'Book-Title').drop_duplicates('Book-Title')[['Book-Title', 
                                                                                        'Book-Author',
                                                                                        'num_rating',
                                                                                       'avg_rating']]
@@ -826,7 +871,17 @@ popular_df = popular_df.merge(books, on = 'Book-Title').drop_duplicates('Book-Ti
 # Berikut merupakan 20 rekomendasi buku berdasarkan popularitas yang diurutkan berdasarkan nilai rata-rata rating (avg_rating).
 
 # %%
-popular_df
+popular
+
+# %%
+recommended_avg_rating = popular['avg_rating'].mean()
+non_recommended_avg_rating = popular_df[~popular_df['Book-Title'].isin(popular['Book-Title'])]['avg_rating'].mean()
+
+print(f"Average Rating of Recommended Books: {recommended_avg_rating}")
+print(f"Average Rating of Non-Recommended Books: {non_recommended_avg_rating}")
+
+# %% [markdown]
+# Hasil evaluasi diatas untuk mengukur seberapa relevan hasil rekomendasi berdasarkan popularitas. Disini saya membagikan perbandingan antara rata-rata dari 20 rekomendasi buku dengan rata-rata dari total buku yang sudah dilakukan penyaringan dengan lebih dari 200 rating yang sudah diberikan. Hasilnya rata-rata pada 20 rekomendasi buku lebih besar daripada rata-rata dari total buku dengan jumlah penilaian rating lebih dari 200. Artinya rekomendasi yang diberikan relevan. 
 
 # %% [markdown]
 # ## Collaborative Filtering (Item Based Filtering)
@@ -839,7 +894,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # Langkah 1: Filter pengguna dan buku terkenal
 user_threshold = 50  # Ambang jumlah buku yang dibaca user
-book_threshold = 20  # Ambang jumlah rating yang diterima buku
+book_threshold = 50  # Ambang jumlah rating yang diterima buku
 
 # Filter pengguna dengan interaksi lebih dari ambang batas
 user_counts = dataset.groupby("User-ID").count()["Book-Title"]
@@ -851,6 +906,9 @@ book_counts = filtered_dataset.groupby("Book-Title").count()["Book-Rating"]
 popular_books = book_counts[book_counts > book_threshold].index
 final_dataset = filtered_dataset[filtered_dataset["Book-Title"].isin(popular_books)]
 final_dataset
+
+# %%
+final_dataset.columns
 
 # %% [markdown]
 # Sintaks ini melakukan penyaringan dataset untuk keperluan Collaborative Filtering dengan Item Based Filtering. Pertama, pengguna yang memberikan rating pada lebih dari 50 buku disaring untuk memastikan hanya pengguna aktif yang dipertimbangkan. Kemudian, buku yang memiliki lebih dari 20 rating juga disaring, sehingga hanya buku yang populer yang digunakan. Hasil akhirnya adalah dataset yang hanya mencakup interaksi antara pengguna aktif dan buku populer, yang siap digunakan untuk analisis lebih lanjut atau untuk membuat rekomendasi berbasis kesamaan antara pengguna dan buku.
@@ -902,6 +960,52 @@ for idx, rec in enumerate(recommendations, 1):
 # %% [markdown]
 # Sintaks di atas adalah contoh penggunaan dari fungsi recommend_books yang telah dibuat sebelumnya dengan memberikan 10 rekomendasi buku setelah membaca Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))
 
+# %%
+# Mengevaluasi relevansi berdasarkan penulis
+author = dataset[dataset['Book-Title'] == book_name]['Book-Author'].iloc[0]
+relevant_books = 0
+for book_title in recommendations:
+    book_author = dataset[dataset['Book-Title'] == book_title]['Book-Author'].iloc[0]
+    if book_author == author:
+        relevant_books += 1
+
+# Menghitung presisi
+precision = relevant_books / len(recommendations)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan: {relevant_books}")
+print(f"Presisi: {precision:.2f}")
+
+# %%
+# Mencari penulis buku berdasarkan judul
+book_name = "Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))"
+
+# Mencari penulis dari dataset
+author = final_dataset[final_dataset['Book-Title'] == book_name]['Book-Author'].iloc[0]
+
+# Mencari buku-buku lain yang ditulis oleh penulis yang sama
+books_by_author = final_dataset[final_dataset['Book-Author'] == author]['Book-Title'].unique()
+
+print(f"Buku-buku yang ditulis oleh {author}:")
+for idx, book in enumerate(books_by_author, 1):
+    print(f"{idx}. {book}")
+
+
+# %%
+# Langkah 4: Mengevaluasi relevansi berdasarkan penulis dalam top-k rekomendasi
+relevant_books = 0
+for book_title in recommendations:
+    if book_title in books_by_author:
+        relevant_books += 1
+
+# Langkah 5: Menghitung recall
+recall = relevant_books / len(books_by_author)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan dalam top-k rekomendasi: {relevant_books}")
+print(f"Jumlah buku relevan yang tersedia: {len(books_by_author)}")
+print(f"Recall: {recall:.2f}")
+
 # %% [markdown]
 # ## Content Based Filtering
 
@@ -950,14 +1054,14 @@ cosine_similarities
 # Fungsi ini memberikan rekomendasi buku berdasarkan konten yang mirip, seperti yang tercermin dari judul buku yang dipilih.
 
 # %%
-# Fungsi untuk merekomendasikan buku berdasarkan nama buku yang dipilih
+# Langkah 4: Fungsi Rekomendasi Buku
 def recommend_books(bookName, number=10):
     # Cari ISBN dari buku yang dipilih
     try:
         isbn = popular_books.loc[popular_books['Book-Title'] == bookName].reset_index(drop=True).iloc[0]['ISBN']
     except IndexError:
         print(f"Buku '{bookName}' tidak ditemukan dalam dataset.")
-        return
+        return []
     
     content = []
     # Temukan indeks buku yang dipilih
@@ -977,9 +1081,53 @@ def recommend_books(bookName, number=10):
     for book in similar_items:
         print(book)
 
-# Contoh: Rekomendasi berdasarkan buku tertentu
+    return similar_items
+
 bookName = "Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))"  # Ganti dengan judul buku yang dipilih
-recommend_books(bookName)
+recommended_books = recommend_books(bookName)
+
+# %%
+# Mengevaluasi relevansi berdasarkan penulis
+author = popular_books[popular_books['Book-Title'] == bookName]['Book-Author'].iloc[0]
+author
+
+# %%
+relevant_books = 0
+for book_title in recommended_books:
+    book_author = popular_books[popular_books['Book-Title'] == book_title]['Book-Author'].iloc[0]
+    if book_author == author:
+        relevant_books += 1
+
+# Menghitung presisi
+precision = relevant_books / len(recommendations)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan: {relevant_books}")
+print(f"Presisi: {precision:.2f}")
+
+# %%
+# Mencari buku-buku lain yang ditulis oleh penulis yang sama
+books_by_author = popular_books[popular_books['Book-Author'] == author]['Book-Title'].unique()
+
+print(f"Buku-buku yang ditulis oleh {author}:")
+for idx, book in enumerate(books_by_author, 1):
+    print(f"{idx}. {book}")
+
+
+# %%
+# Langkah 4: Mengevaluasi relevansi berdasarkan penulis dalam top-k rekomendasi
+relevant_books = 0
+for book_title in recommended_books:
+    if book_title in books_by_author:
+        relevant_books += 1
+
+# Langkah 5: Menghitung recall
+recall = relevant_books / len(books_by_author)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan dalam top-k rekomendasi: {relevant_books}")
+print(f"Jumlah buku relevan yang tersedia: {len(books_by_author)}")
+print(f"Recall: {recall:.2f}")
 
 # %% [markdown]
 # ### Berdasarkan Rata-rata Rating Buku
@@ -1075,6 +1223,48 @@ recommendations
 
 # %% [markdown]
 # Fungsi recommend_books di atas digunakan untuk memberikan rekomendasi buku berdasarkan judul buku yang dipilih. Prosesnya dimulai dengan mencari indeks buku yang dipilih dalam daftar buku populer. Setelah itu, dihitung buku-buku yang paling mirip menggunakan nilai cosine similarity yang telah dihitung sebelumnya. Buku-buku yang mirip dengan buku yang dipilih akan disortir berdasarkan rating rata-rata (avg_rating) secara menurun, dan hanya buku-buku dengan rating terbaik yang akan dimasukkan dalam rekomendasi. Fungsi ini mengembalikan dataframe yang berisi daftar buku yang direkomendasikan, termasuk judul buku, pengarang, dan rating rata-rata, dengan batasan jumlah rekomendasi yang diinginkan.
+
+# %%
+# Mengevaluasi relevansi berdasarkan penulis
+author = popular_books[popular_books['Book-Title'] == bookName]['Book-Author'].iloc[0]
+author
+
+# %%
+relevant_books = 0
+for book_title in recommendations['Book-Title']:
+    book_author = popular_books[popular_books['Book-Title'] == book_title]['Book-Author'].iloc[0]
+    if book_author == author:
+        relevant_books += 1
+
+# Menghitung presisi
+precision = relevant_books / len(recommendations)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan: {relevant_books}")
+print(f"Presisi: {precision:.2f}")
+
+# %%
+# Mencari buku-buku lain yang ditulis oleh penulis yang sama
+books_by_author = popular_books[popular_books['Book-Author'] == author]['Book-Title'].unique()
+
+print(f"Buku-buku yang ditulis oleh {author}:")
+for idx, book in enumerate(books_by_author, 1):
+    print(f"{idx}. {book}")
+
+# %%
+# Mengevaluasi relevansi berdasarkan penulis dalam top-k rekomendasi
+relevant_books = 0
+for book_title in recommended_books:
+    if book_title in books_by_author:
+        relevant_books += 1
+
+# Langkah 5: Menghitung recall
+recall = relevant_books / len(books_by_author)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan dalam top-k rekomendasi: {relevant_books}")
+print(f"Jumlah buku relevan yang tersedia: {len(books_by_author)}")
+print(f"Recall: {recall:.2f}")
 
 # %% [markdown]
 # 
