@@ -804,12 +804,13 @@ Cosine Similarity memiliki nilai antara -1 hingga 1:
 - Nilai **-1** berarti kedua vektor sangat berbeda (kesamaan terbalik).
 
 Formula Cosine Similarity:
+
 $$\text{Cosine Similarity}(A, B) = \frac{A \cdot B}{\|A\| \|B\|}$$
 
 Dimana:
-- \( A \) dan \( B \) adalah vektor yang mewakili dua item (misalnya dua buku).
-- \( \cdot \) adalah operasi perkalian dot antara dua vektor.
-- \( \|A\| \) dan \( \|B\| \) adalah panjang (magnitude) dari vektor \( A \) dan \( B \), yang dihitung sebagai akar kuadrat dari jumlah kuadrat elemen-elemen vektor.
+- $$A$$ dan $$B$$ adalah vektor yang mewakili dua item (misalnya dua buku).
+- $$\cdot $$ adalah operasi perkalian dot antara dua vektor.
+- $$\|A\|$$ dan $$\|B\|$$ adalah panjang (magnitude) dari vektor $$A$$ dan $$B$$, yang dihitung sebagai akar kuadrat dari jumlah kuadrat elemen-elemen vektor.
 
 ### Mengapa Menggunakan Cosine Similarity dalam Sistem Rekomendasi?
 
