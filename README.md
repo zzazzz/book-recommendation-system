@@ -97,22 +97,36 @@ File ini mengandung informasi tentang buku-buku yang ada dalam dataset. Setiap b
 Selain ISBN, informasi berbasis konten buku juga tersedia, seperti **Book-Title**, **Book-Author**, **Year-Of-Publication**, dan **Publisher**. Data ini diperoleh dari **Amazon Web Services**. Jika sebuah buku memiliki lebih dari satu penulis, hanya penulis pertama yang akan dicantumkan.
 
 **Kolom dataset:**
-- **ISBN**: Nomor ISBN unik yang mengidentifikasi buku.
-- **Book-Title**: Judul buku.
-- **Book-Author**: Nama penulis buku (hanya penulis pertama jika lebih dari satu).
-- **Year-Of-Publication**: Tahun publikasi buku.
-- **Publisher**: Penerbit buku.
-- **Image-URL-S**: URL gambar sampul buku dalam ukuran kecil.
-- **Image-URL-M**: URL gambar sampul buku dalam ukuran sedang.
-- **Image-URL-L**: URL gambar sampul buku dalam ukuran besar.
+- **ISBN**: Nomor ISBN unik yang mengidentifikasi buku. Tipe data object.
+- **Book-Title**: Judul buku. Tipe data object.
+- **Book-Author**: Nama penulis buku (hanya penulis pertama jika lebih dari satu). Tipe data object.
+- **Year-Of-Publication**: Tahun publikasi buku. Tipe data object.
+- **Publisher**: Penerbit buku. Tipe data object.
+- **Image-URL-S**: URL gambar sampul buku dalam ukuran kecil. Tipe data object.
+- **Image-URL-M**: URL gambar sampul buku dalam ukuran sedang. Tipe data object.
+- **Image-URL-L**: URL gambar sampul buku dalam ukuran besar. Tipe data object
+
+Berdasarkan tipe data pada setiap kolom, terdapat kesalah pada tipe data 'Year-Of-Publication' yang seharusnya adalah integer. Kesalahan ini nantinya akan diperbaiki pada saat proses data preparation.
+
+**Rangkuman Mengenai dataset pada Books**
+- Jumlah data pada dataset ini adalah 271360 baris.
+- Terdapat nilai kosong sebanyak 2 pada kolom "Book-Author" dan "Publisher".
+- Tidak terdapat data duplikat.
+
+[Sumber dataset](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset)
 
 ### 3. Ratings
 File ini berisi data penilaian yang diberikan oleh pengguna terhadap buku-buku. Penilaian dilakukan pada skala 1 hingga 10, dengan nilai yang lebih tinggi menunjukkan apresiasi yang lebih besar terhadap buku tersebut. Selain itu, ada juga nilai **0** yang menandakan penilaian implisit, di mana pengguna tidak memberikan rating eksplisit terhadap buku.
 
 **Kolom dataset:**
-- **User-ID**: ID pengguna yang memberikan rating.
-- **ISBN**: ISBN buku yang diberi rating.
-- **Book-Rating**: Rating yang diberikan oleh pengguna terhadap buku. Nilai ini berada dalam rentang 1-10 (rating eksplisit) atau 0 (rating implisit).
+- **User-ID**: ID pengguna yang memberikan rating. Tipe data int64.
+- **ISBN**: ISBN buku yang diberi rating. Tipe data object.
+- **Book-Rating**: Rating yang diberikan oleh pengguna terhadap buku. Nilai ini berada dalam rentang 1-10 (rating eksplisit) atau 0 (rating implisit). Tipe data int64.
+
+**Rangkuman Mengenai dataset pada Books**
+- Jumlah data pada dataset ini adalah 1149780 baris.
+- Tidak ada nilai kosong pada setiap kolom.
+- Tidak terdapat data duplikat.
 
 ## Data Preparation
 
@@ -612,7 +626,7 @@ Berikut adalah 20 rekomendasi buku terpopuler yang diurutkan berdasarkan nilai r
 | The Five People You Meet in Heaven                | Mitch Albom           | 244            | 8.020492       |
 | Angels & Demons                                   | Dan Brown             | 310            | 8.016129       |
 
-### Model Development: Collaborative Filtering Item-Based Filtering dan Hasil
+### Model Development: Collaborative Filtering Item-Based dan Hasil
 
 #### Deskripsi
 
@@ -790,9 +804,8 @@ Cosine Similarity memiliki nilai antara -1 hingga 1:
 - Nilai **-1** berarti kedua vektor sangat berbeda (kesamaan terbalik).
 
 Formula Cosine Similarity:
-\[
-\text{Cosine Similarity}(A, B) = \frac{A \cdot B}{\|A\| \|B\|}
-\]
+$$\text{Cosine Similarity}(A, B) = \frac{A \cdot B}{\|A\| \|B\|}$$
+
 Dimana:
 - \( A \) dan \( B \) adalah vektor yang mewakili dua item (misalnya dua buku).
 - \( \cdot \) adalah operasi perkalian dot antara dua vektor.
