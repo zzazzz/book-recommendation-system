@@ -666,7 +666,7 @@ for idx, rec in enumerate(recommendations, 1):
     print(f"{idx}. {rec}")
 
 ```
-**Output:**
+**Output 1: Collaborative Filtering Item-Based**
 
 Berikut adalah contoh output dari rekomendasi buku berdasarkan judul yang diberikan:
 
@@ -792,7 +792,7 @@ Berikut adalah contoh output untuk buku "Harry Potter and the Sorcerer's Stone":
 | 9  | The Stone Diaries | Carol Shields | 7.450704 |
 | 10 | The Shelters of Stone (Earth's Children Series) | JEAN M. AUEL | 7.258621 |
 
-## Evaluasi Model: Cosine Similarity
+## Evaluasi Model: Precision dan Recall
 
 Dalam sistem rekomendasi buku, penting untuk mengevaluasi seberapa baik sistem dalam memberikan rekomendasi yang relevan kepada pengguna. **Recall** dan **Precision** adalah dua metrik evaluasi utama yang digunakan untuk mengukur kinerja sistem rekomendasi.
 
@@ -826,6 +826,33 @@ $$\text{Recall} = \frac{\text{Jumlah Buku Relevan yang Direkomendasikan}}{\text{
 - Precision tinggi berarti sistem hanya merekomendasikan buku yang relevan, tetapi mungkin tidak merekomendasikan banyak buku.
 - Recall tinggi berarti sistem merekomendasikan banyak buku relevan, tetapi ada kemungkinan beberapa buku yang tidak relevan juga ikut terpilih.
 
+## Evaluasi Pada Collaborative Filtering (Item Based Filtering)
+
+Pada **Output 1: Collaborative Filtering Item-Based** dilakukan evaluasi yang memiliki relevansi dengan penulis buku sama. Setelah membaca buku Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback)) karangan J.K Rowling kemudian hasil rekomendasi ini mendapatkan nilai precision dengan menjalakan kode program berikut:
+
+```python
+# Mengevaluasi relevansi berdasarkan penulis
+author = dataset[dataset['Book-Title'] == book_name]['Book-Author'].iloc[0]
+relevant_books = 0
+for book_title in recommendations:
+    book_author = dataset[dataset['Book-Title'] == book_title]['Book-Author'].iloc[0]
+    if book_author == author:
+        relevant_books += 1
+
+# Menghitung presisi
+precision = relevant_books / len(recommendations)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan: {relevant_books}")
+print(f"Presisi: {precision:.2f}")
+```
+
+**Output:**
+
+```
+Jumlah buku relevan: 4
+Presisi: 0.40
+```
 
 ### Kesimpulan
 
