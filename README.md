@@ -794,68 +794,28 @@ Berikut adalah contoh output untuk buku "Harry Potter and the Sorcerer's Stone":
 
 ## Evaluasi Model: Cosine Similarity
 
-### Apa itu Cosine Similarity?
+Dalam sistem rekomendasi buku, penting untuk mengevaluasi seberapa baik sistem dalam memberikan rekomendasi yang relevan kepada pengguna. **Recall** dan **Precision** adalah dua metrik evaluasi utama yang digunakan untuk mengukur kinerja sistem rekomendasi.
 
-**Cosine Similarity** adalah salah satu metrik yang digunakan untuk mengukur tingkat kesamaan antara dua vektor dalam ruang vektor berdimensi tinggi. Dalam konteks sistem rekomendasi buku, vektor tersebut dapat mewakili fitur-fitur buku (misalnya, rating pengguna atau konten judul buku). Metrik ini sering digunakan dalam **Collaborative Filtering** dan **Content-Based Filtering** untuk mengukur seberapa mirip dua item (dalam hal ini buku) berdasarkan pola interaksi atau kontennya.
+- **Precision** mengukur seberapa banyak dari buku yang direkomendasikan oleh sistem yang benar-benar relevan bagi pengguna.
+- **Recall** mengukur seberapa banyak buku yang relevan berhasil ditemukan oleh sistem dari seluruh buku yang relevan yang seharusnya direkomendasikan.
 
-Cosine Similarity memiliki nilai antara -1 hingga 1:
-- Nilai **1** berarti kedua vektor identik (kesamaan maksimal).
-- Nilai **0** berarti kedua vektor tidak memiliki kesamaan (kesamaan minimal).
-- Nilai **-1** berarti kedua vektor sangat berbeda (kesamaan terbalik).
+### Apa itu Precision dan Recall?
 
-Formula Cosine Similarity:
+#### Precision
+**Precision** adalah proporsi dari rekomendasi yang relevan di antara semua rekomendasi yang diberikan oleh sistem. Precision mengukur akurasi sistem dalam merekomendasikan item yang relevan.
 
-$$\text{Cosine Similarity}(A, B) = \frac{A \cdot B}{\|A\| \|B\|}$$
+Formula Precision:
+$$
+\text{Precision} = \frac{\text{Jumlah Buku Relevan yang Direkomendasikan}}{\text{Jumlah Buku yang Direkomendasikan}}
+$$
 
-Dimana:
-- $$A$$ dan $$B$$ adalah vektor yang mewakili dua item (misalnya dua buku).
-- $$\cdot $$ adalah operasi perkalian dot antara dua vektor.
-- $$\|A\|$$ dan $$\|B\|$$ adalah panjang (magnitude) dari vektor $$A$$ dan $$B$$, yang dihitung sebagai akar kuadrat dari jumlah kuadrat elemen-elemen vektor.
+#### Recall
+**Recall** adalah proporsi dari buku relevan yang berhasil ditemukan oleh sistem dari seluruh buku relevan yang tersedia. Recall mengukur sejauh mana sistem dapat menemukan semua buku yang relevan.
 
-### Mengapa Menggunakan Cosine Similarity dalam Sistem Rekomendasi?
-
-1. **Untuk Collaborative Filtering (Item-Based)**:
-   - **Cosine Similarity** digunakan untuk mengukur kesamaan antara buku yang satu dengan buku lainnya berdasarkan rating yang diberikan oleh pengguna. Ini membantu untuk memberikan rekomendasi buku yang memiliki pola rating yang serupa dengan buku yang sudah dinilai oleh pengguna.
-   
-   - Misalnya, jika seorang pengguna memberikan rating tinggi pada Buku A dan Buku B, dan jika dua buku ini memiliki kesamaan rating dari pengguna lain, maka **Cosine Similarity** akan menghasilkan nilai yang tinggi, dan Buku B akan direkomendasikan kepada pengguna.
-
-2. **Untuk Content-Based Filtering**:
-   - Dalam pendekatan **Content-Based**, **Cosine Similarity** digunakan untuk mengukur kesamaan antara buku berdasarkan konten judulnya. Buku dengan konten yang mirip (misalnya, genre yang sama atau kata-kata yang sering muncul dalam judul) akan memiliki nilai Cosine Similarity yang tinggi.
-   
-   - Ini memungkinkan sistem untuk merekomendasikan buku yang mirip dalam hal konten dengan buku yang sudah dinilai atau disukai oleh pengguna.
-
-### Contoh Penggunaan Cosine Similarity dalam Sistem Rekomendasi
-
-- Misalnya, kita memiliki dua buku dengan rating berikut oleh pengguna:
-
-  | **Buku**               | **Pengguna A** | **Pengguna B** | **Pengguna C** |
-  |------------------------|----------------|----------------|----------------|
-  | Buku A                 | 5              | 4              | 0              |
-  | Buku B                 | 4              | 5              | 0              |
-
-  Dalam hal ini, **Cosine Similarity** antara Buku A dan Buku B dapat dihitung untuk menentukan seberapa mirip kedua buku ini berdasarkan rating yang diberikan oleh pengguna.
-
-### Langkah-langkah:
-
-1. Representasikan rating buku sebagai vektor:
-   - Vektor Buku A = [5, 4, 0]
-   - Vektor Buku B = [4, 5, 0]
-  
-2. Hitung perkalian dot antara kedua vektor:
-
-   $$A \cdot B = (5 \times 4) + (4 \times 5) + (0 \times 0) = 20 + 20 = 40$$
-
-3. Hitung panjang dari masing-masing vektor:
-
-   $$\|A\| = \sqrt{5^2 + 4^2 + 0^2} = \sqrt{25 + 16} = \sqrt{41}$$
-
-   $$\|B\| = \sqrt{4^2 + 5^2 + 0^2} = \sqrt{16 + 25} = \sqrt{41}$$
-
-4. Hitung **Cosine Similarity**:
-
-   $$\text{Cosine Similarity}(A, B) = \frac{A \cdot B}{\|A\| \|B\|} = \frac{40}{\sqrt{41} \times \sqrt{41}} = \frac{40}{41} \approx 0.9756$$
-  
-  Dengan nilai **Cosine Similarity** mendekati 1, ini menunjukkan bahwa Buku A dan Buku B sangat mirip dalam hal rating pengguna dan, oleh karena itu, dapat direkomendasikan bersama-sama.
+Formula Recall:
+$$
+\text{Recall} = \frac{\text{Jumlah Buku Relevan yang Direkomendasikan}}{\text{Jumlah Buku Relevan yang Seharusnya Direkomendasikan}}
+$$
 
 ### Kesimpulan
 
