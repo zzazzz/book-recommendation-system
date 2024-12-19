@@ -89,7 +89,7 @@ File ini berisi informasi mengenai pengguna yang berinteraksi dengan buku dalam 
 - Terdapat missing value pada kolom Age sebanyak 110762 data.
 - Tidak terdapat data duplikat.
 
-![Sumber dataset](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset)
+[Sumber dataset](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset)
 
 ### 2. Books
 File ini mengandung informasi tentang buku-buku yang ada dalam dataset. Setiap buku diidentifikasi menggunakan **ISBN** (International Standard Book Number), dan buku yang memiliki ISBN tidak valid telah dihapus dari dataset.
