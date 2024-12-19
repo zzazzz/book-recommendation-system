@@ -80,9 +80,16 @@ Dataset **Book-Crossing** terdiri dari tiga file utama yang menyimpan informasi 
 File ini berisi informasi mengenai pengguna yang berinteraksi dengan buku dalam dataset. Setiap pengguna diidentifikasi dengan **User-ID** yang telah dianonimkan dan dipetakan ke dalam angka. Beberapa informasi tambahan mengenai pengguna, seperti **Lokasi** dan **Usia**, juga disediakan, namun kolom ini bisa saja berisi nilai **NULL** jika data tidak tersedia.
 
 **Kolom dataset:**
-- **User-ID**: ID unik yang mewakili pengguna (dianonimkan).
-- **Lokasi**: Lokasi geografis pengguna, jika tersedia.
-- **Usia**: Usia pengguna, jika tersedia.
+- **User-ID**: ID unik yang mewakili pengguna (dianonimkan). Tipe data int64
+- **Lokasi**: Lokasi geografis pengguna, jika tersedia. Tipe data object
+- **Usia**: Usia pengguna, jika tersedia. Tipe data float64
+
+**Rangkuman Mengenai dataset pada Users**
+- Jumlah data pada dataset ini adalah 278858 baris.
+- Terdapat missing value pada kolom Age sebanyak 110762 data.
+- Tidak terdapat data duplikat.
+
+![Sumber dataset](https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset)
 
 ### 2. Books
 File ini mengandung informasi tentang buku-buku yang ada dalam dataset. Setiap buku diidentifikasi menggunakan **ISBN** (International Standard Book Number), dan buku yang memiliki ISBN tidak valid telah dihapus dari dataset.
