@@ -854,6 +854,59 @@ Jumlah buku relevan: 4
 Presisi: 0.40
 ```
 
+Kemudian saya mencari total buku relevan yang ada berdasarkan penulis dengan menjalankan kode program berikut:
+
+```python
+# Mencari penulis buku berdasarkan judul
+book_name = "Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))"
+
+# Mencari penulis dari dataset
+author = final_dataset[final_dataset['Book-Title'] == book_name]['Book-Author'].iloc[0]
+
+# Mencari buku-buku lain yang ditulis oleh penulis yang sama
+books_by_author = final_dataset[final_dataset['Book-Author'] == author]['Book-Title'].unique()
+
+print(f"Buku-buku yang ditulis oleh {author}:")
+for idx, book in enumerate(books_by_author, 1):
+    print(f"{idx}. {book}")
+```
+
+**Output:**
+
+```
+Buku-buku yang ditulis oleh J. K. Rowling:
+1. Harry Potter and the Chamber of Secrets (Book 2)
+2. Harry Potter and the Sorcerer's Stone (Book 1)
+3. Harry Potter and the Sorcerer's Stone (Harry Potter (Paperback))
+4. Harry Potter and the Order of the Phoenix (Book 5)
+5. Harry Potter and the Prisoner of Azkaban (Book 3)
+6. Harry Potter and the Goblet of Fire (Book 4)
+```
+Selanjutnya adalah menghitung nilai Recall dengan menjalankan kode program berikut:
+
+```python
+# Langkah 4: Mengevaluasi relevansi berdasarkan penulis dalam top-k rekomendasi
+relevant_books = 0
+for book_title in recommendations:
+    if book_title in books_by_author:
+        relevant_books += 1
+
+# Langkah 5: Menghitung recall
+recall = relevant_books / len(books_by_author)
+
+# Menampilkan hasil
+print(f"Jumlah buku relevan dalam top-k rekomendasi: {relevant_books}")
+print(f"Jumlah buku relevan yang tersedia: {len(books_by_author)}")
+print(f"Recall: {recall:.2f}")
+```
+
+**Output:**
+```
+Jumlah buku relevan dalam top-k rekomendasi: 4
+Jumlah buku relevan yang tersedia: 6
+Recall: 0.67
+```
+
 ### Kesimpulan
 
 **Cosine Similarity** adalah metrik yang kuat untuk mengukur kesamaan antar item dalam sistem rekomendasi buku. Pengguna yang menyukai suatu buku dengan pola rating tertentu atau jenis konten tertentu kemungkinan akan tertarik pada buku-buku dengan kesamaan tinggi yang dihitung melalui Cosine Similarity. Menggunakan metrik ini, sistem dapat memberikan rekomendasi yang lebih relevan dan sesuai dengan preferensi pengguna.
