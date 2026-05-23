@@ -411,16 +411,33 @@ st.markdown(
     }
 
     /* ── BOOK CARDS ── */
+    .book-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        column-gap: 16px;
+        row-gap: 34px;
+        align-items: stretch;
+        margin: 4px 0 28px;
+    }
+    .book-grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .book-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
     .book-card {
         background: linear-gradient(160deg, var(--surface), var(--bg));
         border: 1px solid var(--border);
         border-radius: 20px;
         padding: 14px 14px 16px;
+        min-height: 430px;
         height: 100%;
         box-shadow: 0 16px 40px rgba(0,0,0,.44);
         transition: transform .22s cubic-bezier(.34,1.56,.64,1), border-color .2s, box-shadow .2s;
         position: relative;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    .book-card-compact {
+        min-height: 462px;
     }
     .book-card::before {
         content: "";
@@ -431,7 +448,7 @@ st.markdown(
         pointer-events: none;
     }
     .book-card:hover {
-        transform: translateY(-5px) scale(1.02);
+        transform: translateY(-5px);
         border-color: var(--border-glow);
         box-shadow:
             0 28px 70px rgba(0,0,0,.60),
@@ -439,7 +456,7 @@ st.markdown(
     }
     .book-cover-wrap {
         width: 100%;
-        aspect-ratio: 2/3;
+        height: 210px;
         border-radius: 14px;
         overflow: hidden;
         background: linear-gradient(145deg, var(--surface-3), var(--surface));
@@ -447,6 +464,10 @@ st.markdown(
         display: flex; align-items: center; justify-content: center;
         margin-bottom: 14px;
         position: relative;
+        flex: 0 0 auto;
+    }
+    .book-card-compact .book-cover-wrap {
+        height: 286px;
     }
     .book-cover {
         width: 100%; height: 100%;
@@ -465,6 +486,7 @@ st.markdown(
         padding: 3px 8px;
         backdrop-filter: blur(10px);
         letter-spacing: .04em;
+        z-index: 2;
     }
     .book-title {
         font-family: 'Syne', sans-serif;
@@ -473,7 +495,11 @@ st.markdown(
         color: var(--text) !important;
         line-height: 1.25;
         margin-bottom: 7px;
-        min-height: 2.2rem;
+        height: 3.35rem;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
     }
     .book-author {
         font-size: 0.76rem;
@@ -481,12 +507,17 @@ st.markdown(
         line-height: 1.3;
         margin-bottom: 4px;
         font-style: italic;
+        height: 1.05rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .book-publisher {
         font-size: 0.72rem;
         color: var(--muted) !important;
         opacity: .7;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
+        height: 1rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -494,6 +525,7 @@ st.markdown(
     .book-score-badge {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 5px;
         font-size: 0.70rem;
         font-weight: 700;
@@ -502,11 +534,15 @@ st.markdown(
         background: rgba(192,132,252,.10);
         border: 1px solid rgba(192,132,252,.28);
         color: var(--purple) !important;
+        width: fit-content;
+        margin-top: auto;
     }
     .book-score-badge .score-dot {
         width: 5px; height: 5px;
         background: var(--purple);
         border-radius: 50%;
+        display: inline-block;
+        flex: 0 0 auto;
     }
     .no-cover-placeholder {
         display: flex;
@@ -519,6 +555,17 @@ st.markdown(
         gap: 8px;
         height: 100%;
         opacity: .6;
+    }
+    @media(max-width: 1180px) {
+        .book-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media(max-width: 900px) {
+        .book-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media(max-width: 640px) {
+        .book-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
+        .book-card { min-height: 398px; }
+        .book-cover-wrap { height: 190px; }
     }
 
     /* ── DATAFRAME ── */
@@ -1070,46 +1117,48 @@ def book_card_html(row: pd.Series, rank: int, score_label: str | None = None, co
     author = escape(str(row.get("Book_Author", "Unknown author")))
     publisher = escape(str(row.get("Publisher", "")))
     image_url = valid_image_url(row.get("image_url", ""))
+    card_class = "book-card book-card-compact" if compact else "book-card"
 
     if image_url:
-        cover = f'<img class="book-cover" src="{escape(image_url)}" alt="{title} cover" onerror="this.parentElement.innerHTML=\'<div class=&quot;no-cover-placeholder&quot;><span style=&quot;font-size:2rem&quot;>📖</span><span>No Cover</span></div>\'">'
+        cover = f'<img class="book-cover" src="{escape(image_url)}" alt="{title} cover" onerror="this.remove();">'
     else:
         cover = '<div class="no-cover-placeholder"><span style="font-size:2rem">📖</span><span>No Cover</span></div>'
 
     score_html = ""
     if score_label:
-        score_html = f'<div class="book-score-badge"><div class="score-dot"></div>{escape(score_label)}</div>'
+        clean_label = escape(str(score_label))
+        score_html = f'<span class="book-score-badge"><span class="score-dot"></span><span>{clean_label}</span></span>'
 
-    pub_html = f'<div class="book-publisher">{publisher}</div>' if publisher and not compact else ""
+    pub_html = f'<div class="book-publisher">{publisher}</div>' if publisher and not compact else '<div class="book-publisher"></div>'
 
-    return f"""
-    <div class="book-card">
-        <div class="book-cover-wrap">
-            {cover}
-            <div class="book-rank-badge">#{rank}</div>
-        </div>
-        <div class="book-title">{title}</div>
-        <div class="book-author">{author}</div>
-        {pub_html}
-        {score_html}
-    </div>
-    """
+    # Jangan pakai multiline HTML di sini. Streamlit markdown kadang membaca card kedua
+    # dan seterusnya sebagai teks biasa kalau ada newline/indentasi di dalam raw HTML block.
+    return (
+        f'<div class="{card_class}">'
+        f'<div class="book-cover-wrap">{cover}<div class="book-rank-badge">#{rank}</div></div>'
+        f'<div class="book-title">{title}</div>'
+        f'<div class="book-author">{author}</div>'
+        f'{pub_html}'
+        f'{score_html}'
+        f'</div>'
+    )
 
 
 def render_book_grid(frame: pd.DataFrame, score_col: str | None = None, max_items: int = 10, columns: int = 5) -> None:
     items = frame.head(max_items).reset_index(drop=True)
-    for start in range(0, len(items), columns):
-        cols = st.columns(columns)
-        for offset, col in enumerate(cols):
-            idx = start + offset
-            if idx >= len(items):
-                continue
-            row = items.iloc[idx]
-            score_label = None
-            if score_col and score_col in items.columns:
-                v = row[score_col]
-                score_label = f"{v:.3f}" if isinstance(v, (int, float, np.floating)) else str(v)
-            col.markdown(book_card_html(row, rank=idx + 1, score_label=score_label), unsafe_allow_html=True)
+    cards: list[str] = []
+
+    for idx, row in items.iterrows():
+        score_label = None
+        if score_col and score_col in items.columns:
+            v = row[score_col]
+            score_label = f"{float(v):.3f}" if isinstance(v, (int, float, np.floating)) else str(v)
+        cards.append(book_card_html(row, rank=idx + 1, score_label=score_label))
+
+    st.markdown(
+        f'<div class="book-grid cols-{columns}">{"".join(cards)}</div>',
+        unsafe_allow_html=True,
+    )
 
 
 def render_hero(subtitle: str):
