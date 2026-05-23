@@ -178,7 +178,10 @@ st.markdown(
         border-right: 1px solid var(--border);
     }
     section[data-testid="stSidebar"] > div {
-        background: #000000 !important;
+        background: linear-gradient(180deg,
+            rgba(130,80,255,.10) 0%,
+            rgba(56,189,248,.05) 40%,
+            transparent 80%) !important;
     }
     section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
         background: rgba(16,14,26,.92);
@@ -342,7 +345,7 @@ st.markdown(
         background: linear-gradient(145deg, var(--surface), var(--bg));
         border: 1px solid var(--border);
         border-radius: 20px;
-        padding: 18px 20px;
+        padding: 20px 22px;
         box-shadow:
             0 20px 50px rgba(0,0,0,.45),
             inset 0 1px 0 rgba(255,255,255,.04);
@@ -374,13 +377,8 @@ st.markdown(
     div[data-testid="stMetricValue"] * {
         font-family: 'Syne', sans-serif !important;
         font-weight: 900 !important;
-        font-size: clamp(1.42rem, 2.1vw, 1.92rem) !important;
-        line-height: 1.05 !important;
+        font-size: 2rem !important;
         color: var(--text) !important;
-        white-space: nowrap !important;
-        overflow: visible !important;
-        text-overflow: clip !important;
-        letter-spacing: -.03em !important;
     }
 
     /* ── SECTION HEADER ── */
@@ -418,13 +416,11 @@ st.markdown(
         border: 1px solid var(--border);
         border-radius: 20px;
         padding: 14px 14px 16px;
-        height: 430px;
+        height: 100%;
         box-shadow: 0 16px 40px rgba(0,0,0,.44);
         transition: transform .22s cubic-bezier(.34,1.56,.64,1), border-color .2s, box-shadow .2s;
         position: relative;
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
     }
     .book-card::before {
         content: "";
@@ -443,7 +439,7 @@ st.markdown(
     }
     .book-cover-wrap {
         width: 100%;
-        height: 260px;
+        aspect-ratio: 2/3;
         border-radius: 14px;
         overflow: hidden;
         background: linear-gradient(145deg, var(--surface-3), var(--surface));
@@ -477,11 +473,7 @@ st.markdown(
         color: var(--text) !important;
         line-height: 1.25;
         margin-bottom: 7px;
-        height: 3.35rem;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
+        min-height: 2.2rem;
     }
     .book-author {
         font-size: 0.76rem;
@@ -489,17 +481,12 @@ st.markdown(
         line-height: 1.3;
         margin-bottom: 4px;
         font-style: italic;
-        height: 1.05rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
     .book-publisher {
         font-size: 0.72rem;
         color: var(--muted) !important;
         opacity: .7;
         margin-bottom: 10px;
-        height: 1rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -515,8 +502,6 @@ st.markdown(
         background: rgba(192,132,252,.10);
         border: 1px solid rgba(192,132,252,.28);
         color: var(--purple) !important;
-        margin-top: auto;
-        width: fit-content;
     }
     .book-score-badge .score-dot {
         width: 5px; height: 5px;
@@ -1093,8 +1078,7 @@ def book_card_html(row: pd.Series, rank: int, score_label: str | None = None, co
 
     score_html = ""
     if score_label:
-        clean_score_label = re.sub(r"<[^>]*>", "", str(score_label)).strip()
-        score_html = f'<div class="book-score-badge"><div class="score-dot"></div>{escape(clean_score_label)}</div>'
+        score_html = f'<div class="book-score-badge"><div class="score-dot"></div>{escape(score_label)}</div>'
 
     pub_html = f'<div class="book-publisher">{publisher}</div>' if publisher and not compact else ""
 
